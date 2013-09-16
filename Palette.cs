@@ -83,6 +83,35 @@ namespace CncFullMapPreviewGenerator
             using (var s = File.OpenRead(filename))
                 return new Palette(s, remap);
         }
+
+        public static Palette Load_With_Remaps(string filename, int[] shadowreamp, uint[] remaps)
+        {
+            if (remaps.Length != 16) throw new ArgumentException("remaps int array needs to have size of 16..");
+
+            using (var s = File.OpenRead(filename))
+            {
+                // 		RemapIndex: 176, 178, 180, 182, 184, 186, 189, 191, 177, 179, 181, 183, 185, 187, 188, 190
+                Palette p = new Palette(s, shadowreamp);
+                p.colors[176] = remaps[0];
+                p.colors[178] = remaps[1];
+                p.colors[180] = remaps[2];
+                p.colors[182] = remaps[3];
+                p.colors[184] = remaps[4];
+                p.colors[186] = remaps[5];
+                p.colors[189] = remaps[6];
+                p.colors[191] = remaps[7];
+                p.colors[177] = remaps[8];
+                p.colors[179] = remaps[9];
+                p.colors[181] = remaps[10];
+                p.colors[183] = remaps[11];
+                p.colors[185] = remaps[12];
+                p.colors[187] = remaps[13];
+                p.colors[188] = remaps[14];
+                p.colors[190] = remaps[15];
+
+                return p;
+            }
+        }
     }
 
     public interface IPaletteRemap { Color GetRemappedColor(Color original, int index); }
