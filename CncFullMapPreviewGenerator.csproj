@@ -40,8 +40,12 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BooleanMode.cs" />
     <Compile Include="Format40.cs" />
     <Compile Include="Format80.cs" />
+    <Compile Include="IniFile.cs" />
+    <Compile Include="IniSection.cs" />
+    <Compile Include="MapPreviewGenerator.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="RenderUtils.cs" />

@@ -18,23 +18,26 @@ namespace CncFullMapPreviewGenerator
 			BinaryReader reader = new BinaryReader( stream );
             int Width_ = reader.ReadUInt16();
             int Height_ = reader.ReadUInt16();
-            reader.ReadUInt16();
-            reader.ReadUInt16();
-			Width = reader.ReadUInt16();
-			Height = reader.ReadUInt16();
+
 
 			if( Width_ != size || Height_ != size )
 				throw new InvalidDataException(string.Format( "{0}x{1} != {2}x{2}", Width_, Height_, size ) );
 
-			/*NumTiles = */reader.ReadUInt16();
-			/*Zero1 = */reader.ReadUInt16();
-			/*uint Size = */reader.ReadUInt32();
-			uint ImgStart = reader.ReadUInt32();
-			/*Zero2 = */reader.ReadUInt32();
+            /*NumTiles = */
+            reader.ReadUInt16();
+            /*Zero1 = */
+            reader.ReadUInt16();
+            /*uint Size = */
+            reader.ReadUInt32();
+            uint ImgStart = reader.ReadUInt32();
+            /*Zero2 = */
+            reader.ReadUInt32();
 
 			int IndexEnd, IndexStart;
 			if (reader.ReadUInt16() == 65535) // ID1 = FFFFh for cnc
 			{
+                Width = Width_ / TileSize;
+                Height = Height_ / TileSize;
 				/*ID2 = */reader.ReadUInt16();
 				IndexEnd = reader.ReadInt32();
 				IndexStart = reader.ReadInt32();

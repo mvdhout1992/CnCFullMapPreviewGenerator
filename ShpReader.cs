@@ -74,7 +74,6 @@ namespace CncFullMapPreviewGenerator
 
                 foreach (ImageHeader h in headers)
                 {
-                    Console.WriteLine("offset = {0}, imageheader = {1}", h.Offset,h);
                     offsets.Add(h.Offset, h);
                 }
 
