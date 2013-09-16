@@ -9,6 +9,8 @@ namespace CncFullMapPreviewGenerator
 {
     class MapPreviewGenerator
     {
+        static Dictionary<string, int> TiberiumStages = new Dictionary<string, int>();
+        static Random MapRandom;
         const int CellSize = 24; // in pixels
         static bool IsLoaded = false;
         IniFile MapINI;
@@ -22,6 +24,20 @@ namespace CncFullMapPreviewGenerator
         public static void Load()
         {
             TilesetsINI = new IniFile("data/tilesets.ini");
+            MapRandom = new Random();;
+
+            TiberiumStages.Add("ti1", 0);
+            TiberiumStages.Add("ti2", 1);
+            TiberiumStages.Add("ti3", 2);
+            TiberiumStages.Add("ti4", 3);
+            TiberiumStages.Add("ti5", 4);
+            TiberiumStages.Add("ti6", 5);
+            TiberiumStages.Add("ti7", 6);
+            TiberiumStages.Add("ti8", 7);
+            TiberiumStages.Add("ti9", 8);
+            TiberiumStages.Add("ti10", 9);
+            TiberiumStages.Add("ti11", 10);
+            TiberiumStages.Add("ti12", 11);
         }
 
         public MapPreviewGenerator(string FileName)
@@ -134,24 +150,42 @@ namespace CncFullMapPreviewGenerator
                     CellStruct data = Cells[x, y];
 
                     Draw_Template(data, g, x, y);
+                }
+            }
+
+            for (int y = 0; y < 64; y++)
+            {
+                for (int x = 0; x < 64; x++)
+                {
+                    CellStruct data = Cells[x, y];
 
                     if (data.Terrain != null)
                     {
-                        // draw terrain shit
+                        Draw_Terrain(data, g, x, y);
                     }
-
-                    else if (data.Overlay != null)
-                    {
-                        // draw overlay shit
-                    }
-
-                    if (Is_Out_Of_Bounds(x, y))
-                    {
-                        // whatever
-                    }
-
                 }
             }
+
+
+            for (int y = 0; y < 64; y++)
+            {
+                for (int x = 0; x < 64; x++)
+                {
+                    CellStruct data = Cells[x, y];
+
+                    if (data.Overlay != null)
+                    {
+                         Draw_Overlay(data, g, x, y);
+                    }
+                }
+            }
+
+
+
+/*            if (Is_Out_Of_Bounds(x, y))
+            {
+                // whatever
+            }*/
 
 //            Graphics g = Graphics.FromImage(_Bitmap);
 
@@ -174,6 +208,41 @@ namespace CncFullMapPreviewGenerator
 
             Bitmap TempBitmap = RenderUtils.RenderTemplate(Temp, Pal, Cell.Tile);
             g.DrawImage(TempBitmap, X * CellSize, Y * CellSize, TempBitmap.Width, TempBitmap.Height);
+        }
+
+        void Draw_Overlay(CellStruct Cell, Graphics g, int X, int Y)
+        {
+            int[] ShadowIndex = { };
+            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
+
+            string Overlay = Cell.Overlay;
+            int Frame = 0;
+
+            if (TiberiumStages.ContainsKey(Overlay))
+            {
+                Frame = -1;
+                TiberiumStages.TryGetValue(Overlay, out Frame);
+                int index = MapRandom.Next(1, 12); // creates a number between 1 and 12
+                Overlay = string.Format("TI{0}", index);
+            }
+
+            ShpReader Shp = ShpReader.Load("data/" + Overlay + ".tem");
+
+            Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, Frame);
+            g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
+        }
+
+        void Draw_Terrain(CellStruct Cell, Graphics g, int X, int Y)
+        {
+            int[] ShadowIndex = { 3,4 };
+            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
+
+            string[] TerrainData = Cell.Terrain.Split(',');
+
+            ShpReader Shp = ShpReader.Load("data/" + TerrainData[0] + ".tem");
+
+            Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, 0);
+            g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
         }
 
         bool Is_Out_Of_Bounds(int X, int Y)
