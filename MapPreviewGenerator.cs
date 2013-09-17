@@ -490,20 +490,45 @@ namespace CncFullMapPreviewGenerator
             Draw_Structures(g);
             Draw_Units(g);
             Draw_Infantries(g);
-
-
+            Draw_Waypoints(g);
 
 /*            if (Is_Out_Of_Bounds(x, y))
             {
                 // whatever
             }*/
 
-//            Graphics g = Graphics.FromImage(_Bitmap);
-
-//            Draw_Spawn_Locations(ref g, _ScaleFactor);
-//            g.Flush();
-
             return bitMap;
+        }
+
+        void Draw_Text(Graphics g, string text, int x, int y)
+        {
+            int X_Adjust = 7;
+            if (text.Length == 2) X_Adjust = 5;
+  
+            RectangleF rectf = new RectangleF(x * TemplateReader.TileSize + X_Adjust, y * TemplateReader.TileSize + 6, 
+                TemplateReader.TileSize, TemplateReader.TileSize);
+
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            g.DrawString(text, new Font("Thaoma", 8), Brushes.Red, rectf);
+        }
+
+        void Draw_Rectangle(Graphics g, int x, int y)
+        {
+            Pen p = new Pen(Brushes.Red, 0.1f);
+            g.DrawRectangle(p, x * TemplateReader.TileSize, y * TemplateReader.TileSize,
+                TemplateReader.TileSize, TemplateReader.TileSize);
+        }
+
+        void Draw_Waypoints(Graphics g)
+        {
+            foreach (WaypointStruct wp in Waypoints)
+            {
+                Draw_Text(g, wp.Number.ToString(), wp.X, wp.Y);
+                Draw_Rectangle(g, wp.X, wp.Y);
+            }
+
         }
 
         void Draw_Units(Graphics g)
