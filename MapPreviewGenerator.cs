@@ -13,6 +13,7 @@ namespace CncFullMapPreviewGenerator
         static Random MapRandom;
         const int CellSize = 24; // in pixels
         static bool IsLoaded = false;
+        string Theater;
         IniFile MapINI;
         IniFile TemplatesINI;
         static IniFile TilesetsINI;
@@ -22,6 +23,7 @@ namespace CncFullMapPreviewGenerator
         List<WaypointStruct> Waypoints = new List<WaypointStruct>();
         List<UnitInfo> Units = new List<UnitInfo>();
         List<InfantryInfo> Infantries = new List<InfantryInfo>();
+        List<StructureInfo> Structures = new List<StructureInfo>();
 
         static Bitmap[] SpawnLocationBitmaps = new Bitmap[8];
         int MapWidth = -1, MapHeight = -1, MapY = -1, MapX = -1;
@@ -88,6 +90,7 @@ namespace CncFullMapPreviewGenerator
             Parse_Overlay(Raw);
             Parse_Units();
             Parse_Infantry();
+            Parse_Structures();
 
             for (int x = 0; x < 64; x++)
             {
@@ -156,7 +159,7 @@ namespace CncFullMapPreviewGenerator
         void Parse_Theater()
         {
 
-            string Theater = MapINI.getStringValue("Map", "Theater", "temperate");
+            Theater = MapINI.getStringValue("Map", "Theater", "temperate");
             Theater = Theater.ToLower();
 
             switch (Theater)
@@ -178,7 +181,7 @@ namespace CncFullMapPreviewGenerator
             }
 
             int[] ShadowIndex = { 3, 4 };
-            Pal = Palette.Load("data/" + PalName + ".pal", ShadowIndex);
+            Pal = Palette.Load("data/" + Theater + "/" + PalName + ".pal", ShadowIndex);
         }
 
         void Sub_Cell_Pixel_Offsets(int SubCell, out int X, out int Y)
@@ -222,6 +225,35 @@ namespace CncFullMapPreviewGenerator
                 }
             }
         }
+
+        void Parse_Structures()
+        {
+            var SectionStructures = MapINI.getSectionContent("Structures");
+            if (SectionStructures != null)
+            {
+                foreach (KeyValuePair<string, string> entry in SectionStructures)
+                {
+                    string StructCommaString = entry.Value;
+                    string[] StructData = StructCommaString.Split(',');
+
+                    // 0=neutral,afld,256,6,0,none
+                    StructureInfo s = new StructureInfo();
+                    s.Name = StructData[1];
+                    s.Side = StructData[0];
+                    s.State = int.Parse(StructData[4]);
+                    s.HP = int.Parse(StructData[2]);
+                    int CellIndex = int.Parse(StructData[3]);
+                    s.Y = CellIndex / 64;
+                    s.X = CellIndex % 64;
+
+                    Structures.Add(s);
+
+                    Console.WriteLine("structure name = {0}, side {1}, HP = {5}, State = {2}, X = {3}, Y = {4}", s.Name,
+                        s.Side, s.State, s.X, s.Y, s.HP);
+                }
+            }
+        }
+
 
         void Parse_Infantry()
         {
@@ -298,6 +330,7 @@ namespace CncFullMapPreviewGenerator
                 }
             }
 
+            Draw_Structures(g);
             Draw_Units(g);
             Draw_Infantries(g);
 
@@ -362,6 +395,24 @@ namespace CncFullMapPreviewGenerator
             g.DrawImage(TempBitmap, inf.X * CellSize + subX, inf.Y * CellSize + subY, TempBitmap.Width, TempBitmap.Height);
         }
 
+        void Draw_Structures(Graphics g)
+        {
+            foreach (StructureInfo s in Structures)
+            {
+                Draw_Structure(s, g);
+            }
+
+        }
+
+        void Draw_Structure(StructureInfo s, Graphics g)
+        {
+            ShpReader StructShp = ShpReader.Load(General_File_String_From_Name(s.Name));
+
+            Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Pal, 0);
+
+            g.DrawImage(StructBitmap, s.X * CellSize, s.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
+        }
+
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
         {
 //            if (Cell.Tile != 0 ) { return; }
@@ -376,7 +427,7 @@ namespace CncFullMapPreviewGenerator
 
         string File_String_From_Name(string Name)
         {
-            return ("data/" + Name + TheaterFilesExtension);
+            return ("data/" + Theater + "/" + Name + TheaterFilesExtension);
         }
 
         string General_File_String_From_Name(string Name)
@@ -443,6 +494,15 @@ namespace CncFullMapPreviewGenerator
         public int X;
         public int Y;
         public int SubCell;
+    }
+    struct StructureInfo
+    {
+        public string Name;
+        public string Side;
+        public int State;
+        public int X;
+        public int Y;
+        public int HP;
     }
 
     struct CellStruct
