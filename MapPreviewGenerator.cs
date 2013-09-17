@@ -16,6 +16,8 @@ namespace CncFullMapPreviewGenerator
         IniFile MapINI;
         IniFile TemplatesINI;
         static IniFile TilesetsINI;
+        string TheaterFilesExtension;
+        Palette Pal;
         CellStruct[,] Cells = new CellStruct[64, 64];
         List<WaypointStruct> Waypoints = new List<WaypointStruct>();
         List<UnitInfo> Units = new List<UnitInfo>();
@@ -52,6 +54,8 @@ namespace CncFullMapPreviewGenerator
             MapWidth = MapINI.getIntValue("Map", "Width", -1);
             MapX = MapINI.getIntValue("Map", "X", -1);
             MapY = MapINI.getIntValue("Map", "Y", -1);
+
+            Parse_Theater();
 
             string MapBin = FileName.Replace(".ini", ".bin");
 
@@ -122,11 +126,11 @@ namespace CncFullMapPreviewGenerator
             Parse_Units();
             Parse_Infantry();
 
-            for (int y = 0; y < 64; y++)
+            for (int x = 0; x < 64; x++)
             {
-                for (int x = 0; x < 64; x++)
+                for (int y = 0; y < 64; y++)
                 {
-                    int Index = (y * 64) + x;
+                    int Index = (x * 64) + y;
                     Cells[y, x] = Raw[Index];
 
                     int WayPoint = Raw[Index].Waypoint - 1;
@@ -143,6 +147,34 @@ namespace CncFullMapPreviewGenerator
                     }
                 }
             }
+        }
+
+        void Parse_Theater()
+        {
+
+            string Theater = MapINI.getStringValue("Map", "Theater", "temperate");
+            Theater = Theater.ToLower();
+
+            switch (Theater)
+            {
+                case "winter": TheaterFilesExtension = ".win"; break;
+                case "snow": TheaterFilesExtension = ".sno"; break;
+                case "desert": TheaterFilesExtension = ".des"; break;
+                default: TheaterFilesExtension = ".tem"; break;
+            }
+
+            string PalName = "temperat";
+
+            switch (Theater)
+            {
+                case "winter": PalName = "winter"; break;
+                case "snow": PalName = "snow"; break;
+                case "desert": PalName = "desert"; break;
+                default: PalName = "temperat";  break;
+            }
+
+            int[] ShadowIndex = { 3, 4 };
+            Pal = Palette.Load("data/" + PalName + ".pal", ShadowIndex);
         }
 
         void Parse_Units()
@@ -263,22 +295,21 @@ namespace CncFullMapPreviewGenerator
         {
 //            if (Cell.Tile != 0 ) { return; }
 
-            int[] ShadowIndex = { };
-            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
-
             string TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "0");
 
-            TemplateReader Temp = TemplateReader.Load("data/" + TemplateString + ".tem");
+            TemplateReader Temp = TemplateReader.Load(File_String_From_Name(TemplateString));
 
             Bitmap TempBitmap = RenderUtils.RenderTemplate(Temp, Pal, Cell.Tile);
             g.DrawImage(TempBitmap, X * CellSize, Y * CellSize, TempBitmap.Width, TempBitmap.Height);
         }
 
+        string File_String_From_Name(string Name)
+        {
+            return ("data/" + Name + TheaterFilesExtension);
+        }
+
         void Draw_Overlay(CellStruct Cell, Graphics g, int X, int Y)
         {
-            int[] ShadowIndex = { };
-            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
-
             string Overlay = Cell.Overlay;
             int Frame = 0;
 
@@ -290,7 +321,7 @@ namespace CncFullMapPreviewGenerator
                 Overlay = string.Format("TI{0}", index);
             }
 
-            ShpReader Shp = ShpReader.Load("data/" + Overlay + ".tem");
+            ShpReader Shp = ShpReader.Load(File_String_From_Name(Overlay));
 
             Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, Frame);
             g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
@@ -298,12 +329,9 @@ namespace CncFullMapPreviewGenerator
 
         void Draw_Terrain(CellStruct Cell, Graphics g, int X, int Y)
         {
-            int[] ShadowIndex = { 3,4 };
-            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
-
             string[] TerrainData = Cell.Terrain.Split(',');
 
-            ShpReader Shp = ShpReader.Load("data/" + TerrainData[0] + ".tem");
+            ShpReader Shp = ShpReader.Load(File_String_From_Name(TerrainData[0]));
 
             Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, 0);
             g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
