@@ -9,7 +9,7 @@ namespace CncFullMapPreviewGenerator
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main2(string[] args)
         {
             // Make sure the Parse() functions parse commas and periods correctly
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -22,13 +22,31 @@ namespace CncFullMapPreviewGenerator
         }
 
 
-        static void Main2(string[] args)
+        static void Main(string[] args)
         {
             int[] ShadowIndex = { 3, 4 };
-            uint[] Remaps = { 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500 };
-            Palette Pal = Palette.Load_With_Remaps("data/temperat.pal", ShadowIndex, Remaps);
+            RGB[] Remaps = { 
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                            
+                            };
+            Palette Pal = Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex, Remaps);
 //            Palette Pal = Palette.Load("data/temperat.pal", ShadowIndex);
-            ShpReader SHP = ShpReader.Load("data/proc.shp");
+            ShpReader SHP = ShpReader.Load("data/general/proc.shp");
             Bitmap ShpBitmap = RenderUtils.RenderShp(SHP, Pal, 19);
 
 //            TemplateReader Template = TemplateReader.Load("data/bridge2h.tem", Pal);

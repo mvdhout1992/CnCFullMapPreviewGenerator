@@ -14,6 +14,7 @@ namespace CncFullMapPreviewGenerator
         const int CellSize = 24; // in pixels
         static bool IsLoaded = false;
         string Theater;
+        string PalName;
         IniFile MapINI;
         IniFile TemplatesINI;
         static IniFile TilesetsINI;
@@ -25,6 +26,7 @@ namespace CncFullMapPreviewGenerator
         List<InfantryInfo> Infantries = new List<InfantryInfo>();
         List<SmudgeInfo> Smudges = new List<SmudgeInfo>();
         List<StructureInfo> Structures = new List<StructureInfo>();
+        Dictionary<string, Palette> ColorRemaps = new Dictionary<string, Palette>();
         List<BibInfo> Bibs = new List<BibInfo>();
         static Dictionary<string, BuildingBibInfo> BuildingBibs = new Dictionary<string, BuildingBibInfo>();
         static Dictionary<string, int> BuildingDamageFrames = new Dictionary<string, int>();
@@ -143,6 +145,11 @@ namespace CncFullMapPreviewGenerator
             BuildingDamageFrames.Add("tmpl", 5);
         }
 
+        void Load_Remap_Tables()
+        {
+
+        }
+
         int Frame_From_Building_HP(StructureInfo s)
         {
             if (s.HP > 128) { return 0; }
@@ -151,6 +158,73 @@ namespace CncFullMapPreviewGenerator
             BuildingDamageFrames.TryGetValue(s.Name, out Frame);
 
             return Frame;
+        }
+/*
+GoodGuy	 GDI	 Gold
+BadGuy	 NOD	 Red structures, silver units
+Special	 None	 Gold
+Neutral	 None (Civilians)	 Gold
+Multi1	 Choosable	 Teal
+Multi2	 Choosable	 Orange
+Multi3	 Choosable	 Lime
+Multi4	 Choosable	 Silver
+Multi5	 Choosable	 Gold
+Multi6	 Choosable	 Red */
+
+/*
+GDI:
+GDI yellow. Has slightly different radar colors than multiplayer yellow.
+Nod
+Nod's scheme, with grey units, red buildings and red radar colors.
+Yellow:
+Multiplayer yellow.
+Red:
+Multiplayer red.
+Teal:
+Multiplayer teal (blue/greenish).
+Orange:
+Multiplayer orange.
+Green:
+Multiplayer green.
+Grey:
+Multiplayer grey (metallic / urban camo).
+Neutral:
+Standard yellow, but with grey radar colors. Used by [Neutral] and [Special].
+Jurassic:
+Standard yellow, but with red radar colors. Used by the [Special] side dinosaurs in the Funpark missions.
+DarkGrey:
+New added dark grey scheme
+Brown:
+New added brown scheme
+Fire:
+New added bright yellow/orange scheme
+WarmSilver:
+New added pale brown scheme */
+
+
+        void Load_Remap_Palettes()
+        {
+            int[] ShadowIndex = { 3, 4 };
+
+            ColorRemaps.Add("test", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
+            new RGB[] {
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),
+                               new RGB(255, 0, 0),                          
+                            }));
         }
 
         public MapPreviewGenerator(string FileName)
@@ -164,6 +238,7 @@ namespace CncFullMapPreviewGenerator
             MapY = MapINI.getIntValue("Map", "Y", -1);
 
             Parse_Theater();
+            Load_Remap_Palettes();
 
             string MapBin = FileName.Replace(".ini", ".bin");
 
@@ -277,7 +352,7 @@ namespace CncFullMapPreviewGenerator
                 default: TheaterFilesExtension = ".tem"; break;
             }
 
-            string PalName = "temperat";
+            PalName = "temperat";
 
             switch (Theater)
             {
@@ -511,12 +586,12 @@ namespace CncFullMapPreviewGenerator
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            g.DrawString(text, new Font("Thaoma", 8), Brushes.Red, rectf);
+            g.DrawString(text, new Font("Thaoma", 8), Brushes.GreenYellow, rectf);
         }
 
         void Draw_Rectangle(Graphics g, int x, int y)
         {
-            Pen p = new Pen(Brushes.Red, 0.1f);
+            Pen p = new Pen(Brushes.GreenYellow, 0.1f);
             g.DrawRectangle(p, x * TemplateReader.TileSize, y * TemplateReader.TileSize,
                 TemplateReader.TileSize, TemplateReader.TileSize);
         }
@@ -852,5 +927,18 @@ namespace CncFullMapPreviewGenerator
         Beach,
         Ore,
         Gems,
+    }
+    public struct RGB
+    {
+        public byte R;
+        public byte G;
+        public byte B;
+
+        public RGB(byte R_, byte G_, byte B_)
+        {
+            R = R_;
+            G = G_;
+            B = B_;
+        }
     }
 }
