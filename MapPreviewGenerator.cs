@@ -67,6 +67,8 @@ namespace CncFullMapPreviewGenerator
 
             var ByteReader = new FastByteReader(fileBytes);
 
+
+            // Parse templates
             int i = 0;
             while (!ByteReader.Done())
             {
@@ -79,35 +81,44 @@ namespace CncFullMapPreviewGenerator
 
                 if (i == 64 * 64)
                     break;
-
             }
 
+            Parse_Waypoints();
+            Parse_Terrain(Raw);
+            Parse_Overlay(Raw);
+            Parse_Units();
+            Parse_Infantry();
+
+            for (int x = 0; x < 64; x++)
+            {
+                for (int y = 0; y < 64; y++)
+                {
+                    int Index = (x * 64) + y;
+                    Cells[y, x] = Raw[Index];
+                }
+            }
+        }
+
+        void Parse_Waypoints()
+        {
             var SectionKeyValues = MapINI.getSectionContent("Waypoints");
 
             foreach (KeyValuePair<string, string> entry in SectionKeyValues)
             {
                 int WayPoint = int.Parse(entry.Key);
-                int Cell = int.Parse(entry.Value);
+                int CellIndex = int.Parse(entry.Value);
 
-                Raw[Cell].Waypoint = WayPoint + 1;
-
-                //                Console.WriteLine("{0} = {1}", WayPoint, Cell);
+                Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, CellIndex);
+                WaypointStruct WP = new WaypointStruct();
+                WP.Number = WayPoint;
+                WP.X =  CellIndex % 64;
+                WP.Y = CellIndex / 64;
+                Waypoints.Add(WP);
             }
+        }
 
-            var SectionTerrrain = MapINI.getSectionContent("Terrain");
-
-            if (SectionTerrrain != null)
-            {
-                foreach (KeyValuePair<string, string> entry in SectionTerrrain)
-                {
-                    int Cell = int.Parse(entry.Key);
-                    string Terrain = entry.Value;
-
-                    Raw[Cell].Terrain = Terrain;
-
-                    //                Console.WriteLine("{0} = {1}", Cell, Terrain);
-                }
-            }
+        void Parse_Overlay(CellStruct[] Raw)
+        {
             var SectionOverlay = MapINI.getSectionContent("Overlay");
 
             if (SectionOverlay != null)
@@ -122,29 +133,22 @@ namespace CncFullMapPreviewGenerator
                     //                Console.WriteLine("{0} = {1}", Cell, Terrain);
                 }
             }
+        }
 
-            Parse_Units();
-            Parse_Infantry();
+        void Parse_Terrain(CellStruct[] Raw)
+        {
+            var SectionTerrrain = MapINI.getSectionContent("Terrain");
 
-            for (int x = 0; x < 64; x++)
+            if (SectionTerrrain != null)
             {
-                for (int y = 0; y < 64; y++)
+                foreach (KeyValuePair<string, string> entry in SectionTerrrain)
                 {
-                    int Index = (x * 64) + y;
-                    Cells[y, x] = Raw[Index];
+                    int Cell = int.Parse(entry.Key);
+                    string Terrain = entry.Value;
 
-                    int WayPoint = Raw[Index].Waypoint - 1;
-                    if (WayPoint >= 0)
-                    {
-                        //                        Console.WriteLine("Waypoint found! ID = {0}, Raw = {1}", WayPoint, Index);
+                    Raw[Cell].Terrain = Terrain;
 
-                        Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, Index);
-                        WaypointStruct WP = new WaypointStruct();
-                        WP.Number = WayPoint;
-                        WP.X = x;
-                        WP.Y = y;
-                        Waypoints.Add(WP);
-                    }
+                    // Console.WriteLine("{0} = {1}", Cell, Terrain);
                 }
             }
         }
@@ -175,6 +179,21 @@ namespace CncFullMapPreviewGenerator
 
             int[] ShadowIndex = { 3, 4 };
             Pal = Palette.Load("data/" + PalName + ".pal", ShadowIndex);
+        }
+
+        void Sub_Cell_Pixel_Offsets(int SubCell, out int X, out int Y)
+        {
+            X = -19; Y = -9;
+
+            switch (SubCell)
+            {
+                case 1: X += 0; Y += 0; break;
+                case 2: X += 11; Y += 0; break;
+                case 3: Y += 11; break;
+                case 4: X += 11; Y += 11; break;
+                case 0: X += 6; Y += 6; break;
+                default: break;
+            }
         }
 
         void Parse_Units()
@@ -227,8 +246,11 @@ namespace CncFullMapPreviewGenerator
 
                     Infantries.Add(inf);
 
+                    int subX; int subY;
+                    Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
+
                     Console.WriteLine("infantry name = {0}, Side = {1}, Angle = {2}, SubCell = {5}, X = {3}, Y = {4}", inf.Name,
-                        inf.Side, inf.Angle, inf.X, inf.Y, inf.SubCell);
+                        inf.Side, inf.Angle, inf.X + subX, inf.Y + subY, inf.SubCell);
                 }
             }
         }
@@ -307,8 +329,17 @@ namespace CncFullMapPreviewGenerator
         {
             ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
 
-            Bitmap TempBitmap = RenderUtils.RenderShp(UnitShp, Pal, 0);
-            g.DrawImage(TempBitmap, u.X * CellSize, u.Y * CellSize, TempBitmap.Width, TempBitmap.Height);
+            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Pal, 0);
+
+            Draw_Centered(g, UnitBitmap, u);
+        }
+
+        void Draw_Centered(Graphics g, Bitmap bitMap, UnitInfo u)
+        {
+            int X = (u.X * CellSize) + 12 - (bitMap.Width / 2);
+            int Y = (u.Y * CellSize) + 12 - (bitMap.Height / 2);
+
+            g.DrawImage(bitMap, X, Y, bitMap.Width, bitMap.Height);
         }
 
         void Draw_Infantries(Graphics g)
@@ -325,7 +356,10 @@ namespace CncFullMapPreviewGenerator
             ShpReader InfShp = ShpReader.Load(General_File_String_From_Name(inf.Name));
 
             Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Pal, 0);
-            g.DrawImage(TempBitmap, inf.X * CellSize, inf.Y * CellSize, TempBitmap.Width, TempBitmap.Height);
+            int subX, subY;
+            Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
+
+            g.DrawImage(TempBitmap, inf.X * CellSize + subX, inf.Y * CellSize + subY, TempBitmap.Width, TempBitmap.Height);
         }
 
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
