@@ -23,6 +23,7 @@ namespace CncFullMapPreviewGenerator
         List<WaypointStruct> Waypoints = new List<WaypointStruct>();
         List<UnitInfo> Units = new List<UnitInfo>();
         List<InfantryInfo> Infantries = new List<InfantryInfo>();
+        List<SmudgeInfo> Smudges = new List<SmudgeInfo>();
         List<StructureInfo> Structures = new List<StructureInfo>();
         List<BibInfo> Bibs = new List<BibInfo>();
         static Dictionary<string, BuildingBibInfo> BuildingBibs = new Dictionary<string, BuildingBibInfo>();
@@ -193,6 +194,7 @@ namespace CncFullMapPreviewGenerator
             Parse_Waypoints();
             Parse_Terrain(Raw);
             Parse_Overlay(Raw);
+            Parse_Smudges();
             Parse_Units();
             Parse_Infantry();
             Parse_Structures();
@@ -331,6 +333,28 @@ namespace CncFullMapPreviewGenerator
             }
         }
 
+        void Parse_Smudges()
+        {
+            var SectionSmudges = MapINI.getSectionContent("Smudges");
+            if (SectionSmudges != null)
+            {
+                foreach (KeyValuePair<string, string> entry in SectionSmudges)
+                {
+                    string SmudgesCommaString = entry.Value;
+                    string[] SmudgesData = SmudgesCommaString.Split(',');
+
+                    SmudgeInfo sm = new SmudgeInfo();
+                    sm.Name = SmudgesData[0];
+                    int CellIndex = int.Parse(SmudgesData[1]);
+                    sm.Y = CellIndex / 64;
+                    sm.X = CellIndex % 64;
+                    sm.State = int.Parse(SmudgesData[2]);
+
+                    Smudges.Add(sm);
+                }
+            }
+        }
+
         void Parse_Structures()
         {
             var SectionStructures = MapINI.getSectionContent("Structures");
@@ -461,6 +485,7 @@ namespace CncFullMapPreviewGenerator
                 }
             }
 
+            Draw_Smudges(g);
             Draw_Bibs(g);
             Draw_Structures(g);
             Draw_Units(g);
@@ -543,6 +568,24 @@ namespace CncFullMapPreviewGenerator
 
             g.DrawImage(StructBitmap, s.X * CellSize, s.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
         }
+
+        void Draw_Smudges(Graphics g)
+        {
+            foreach (SmudgeInfo sm in Smudges)
+            {
+                Draw_Smudge(sm, g);
+            }
+        }
+
+        void Draw_Smudge(SmudgeInfo sm, Graphics g)
+        {
+            TemplateReader SmudgeTemp = TemplateReader.Load(General_File_String_From_Name(sm.Name));
+
+            Bitmap StructBitmap = RenderUtils.RenderTemplate(SmudgeTemp, Pal, sm.State);
+
+            g.DrawImage(StructBitmap, sm.X * CellSize, sm.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
+        }
+
 
         void Draw_Bibs(Graphics g)
         {
@@ -735,6 +778,14 @@ namespace CncFullMapPreviewGenerator
         public int X;
         public int Y;
     }
+    struct SmudgeInfo
+    {
+        public string Name;
+        public int X;
+        public int Y;
+        public int State;
+    }
+
     struct BuildingBibInfo
     {
         public string Name;
