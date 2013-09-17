@@ -276,6 +276,9 @@ namespace CncFullMapPreviewGenerator
                 }
             }
 
+            Draw_Units(g);
+            Draw_Infantries(g);
+
 
 
 /*            if (Is_Out_Of_Bounds(x, y))
@@ -289,6 +292,40 @@ namespace CncFullMapPreviewGenerator
 //            g.Flush();
 
             return bitMap;
+        }
+
+        void Draw_Units(Graphics g)
+        {
+            foreach (UnitInfo u in Units)
+            {
+                Draw_Unit(u, g);
+            }
+
+        }
+
+        void Draw_Unit(UnitInfo u, Graphics g)
+        {
+            ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
+
+            Bitmap TempBitmap = RenderUtils.RenderShp(UnitShp, Pal, 0);
+            g.DrawImage(TempBitmap, u.X * CellSize, u.Y * CellSize, TempBitmap.Width, TempBitmap.Height);
+        }
+
+        void Draw_Infantries(Graphics g)
+        {
+            foreach (InfantryInfo i in Infantries)
+            {
+                Draw_Infantry(i, g);
+            }
+
+        }
+
+        void Draw_Infantry(InfantryInfo inf, Graphics g)
+        {
+            ShpReader InfShp = ShpReader.Load(General_File_String_From_Name(inf.Name));
+
+            Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Pal, 0);
+            g.DrawImage(TempBitmap, inf.X * CellSize, inf.Y * CellSize, TempBitmap.Width, TempBitmap.Height);
         }
 
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
@@ -306,6 +343,11 @@ namespace CncFullMapPreviewGenerator
         string File_String_From_Name(string Name)
         {
             return ("data/" + Name + TheaterFilesExtension);
+        }
+
+        string General_File_String_From_Name(string Name)
+        {
+            return ("data/general/" + Name + ".shp");
         }
 
         void Draw_Overlay(CellStruct Cell, Graphics g, int X, int Y)
