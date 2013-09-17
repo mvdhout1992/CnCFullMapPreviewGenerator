@@ -65,5 +65,42 @@ namespace CncFullMapPreviewGenerator
             return bitmap;
         }
 
+        public static Bitmap RenderTemplate(TemplateReader template, Palette p)
+        {
+
+            var bitmap = new Bitmap(TemplateReader.TileSize * template.Width, TemplateReader.TileSize * template.Height,
+                PixelFormat.Format8bppIndexed);
+
+            bitmap.Palette = p.AsSystemPalette();
+
+            var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+
+            unsafe
+            {
+                byte* q = (byte*)data.Scan0.ToPointer();
+                var stride = data.Stride;
+
+                for (var u = 0; u < template.Width; u++)
+                    for (var v = 0; v < template.Height; v++)
+                        if (template.TileBitmapBytes[u + v * template.Width] != null)
+                        {
+                            var rawImage = template.TileBitmapBytes[u + v * template.Width];
+                            for (var i = 0; i < TemplateReader.TileSize; i++)
+                                for (var j = 0; j < TemplateReader.TileSize; j++)
+                                    q[(v * TemplateReader.TileSize + j) * stride + u * TemplateReader.TileSize + i] = rawImage[i + TemplateReader.TileSize * j];
+                        }
+                        else
+                        {
+                            for (var i = 0; i < TemplateReader.TileSize; i++)
+                                for (var j = 0; j < TemplateReader.TileSize; j++)
+                                    q[(v * TemplateReader.TileSize + j) * stride + u * TemplateReader.TileSize + i] = 0;
+                        }
+            }
+
+            bitmap.UnlockBits(data);
+            return bitmap;
+        }
+
     }
 }

@@ -24,6 +24,9 @@ namespace CncFullMapPreviewGenerator
         List<UnitInfo> Units = new List<UnitInfo>();
         List<InfantryInfo> Infantries = new List<InfantryInfo>();
         List<StructureInfo> Structures = new List<StructureInfo>();
+        List<BibInfo> Bibs = new List<BibInfo>();
+        static Dictionary<string, BuildingBibInfo> BuildingBibs = new Dictionary<string, BuildingBibInfo>();
+        static Dictionary<string, int> BuildingDamageFrames = new Dictionary<string, int>();
 
         static Bitmap[] SpawnLocationBitmaps = new Bitmap[8];
         int MapWidth = -1, MapHeight = -1, MapY = -1, MapX = -1;
@@ -32,6 +35,9 @@ namespace CncFullMapPreviewGenerator
         {
             TilesetsINI = new IniFile("data/tilesets.ini");
             MapRandom = new Random();;
+
+            Load_Building_Damage_Frames();
+            Load_Building_Bibs();
 
             TiberiumStages.Add("ti1", 0);
             TiberiumStages.Add("ti2", 1);
@@ -45,6 +51,105 @@ namespace CncFullMapPreviewGenerator
             TiberiumStages.Add("ti10", 9);
             TiberiumStages.Add("ti11", 10);
             TiberiumStages.Add("ti12", 11);
+        }
+
+        static void Load_Building_Bibs()
+        {
+            BuildingBibs.Add("afld", new BuildingBibInfo("bib1", 1));
+
+            BuildingBibs.Add("bio", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("eye", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("fact", new BuildingBibInfo("bib2", 1));
+            BuildingBibs.Add("fix", new BuildingBibInfo("bib2", 2));
+            BuildingBibs.Add("hand", new BuildingBibInfo("bib3", 2));
+            BuildingBibs.Add("hosp", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("hpad", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("hq", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("miss", new BuildingBibInfo("bib2", 1));
+            BuildingBibs.Add("nuke", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("nuk2", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("proc", new BuildingBibInfo("bib2", 2));
+            BuildingBibs.Add("pyle", new BuildingBibInfo("bib3", 1));
+            BuildingBibs.Add("silo", new BuildingBibInfo("bib3", 0));
+            BuildingBibs.Add("weap", new BuildingBibInfo("bib2", 2));
+            BuildingBibs.Add("tmpl", new BuildingBibInfo("bib2", 2));
+
+        }
+        static void Load_Building_Damage_Frames()
+        {
+            // the GUN turret building requires special logic as it 
+            // might make use of the angle property
+
+            BuildingDamageFrames.Add("afld", 16);
+            BuildingDamageFrames.Add("arco", 1);
+            BuildingDamageFrames.Add("atwr", 1);
+            BuildingDamageFrames.Add("bio", 1);
+            BuildingDamageFrames.Add("eye", 16);
+            BuildingDamageFrames.Add("fact", 24);
+            BuildingDamageFrames.Add("fix", 7);
+            BuildingDamageFrames.Add("gtwr", 1);
+            BuildingDamageFrames.Add("gun", 64);
+            BuildingDamageFrames.Add("hand", 1);
+            BuildingDamageFrames.Add("hosp", 4);
+            BuildingDamageFrames.Add("hpad", 7);
+            BuildingDamageFrames.Add("hq", 16);
+            BuildingDamageFrames.Add("miss", 1);
+            BuildingDamageFrames.Add("nuk2", 4);
+            BuildingDamageFrames.Add("nuke", 4);
+            BuildingDamageFrames.Add("obli", 4);
+            BuildingDamageFrames.Add("proc", 30);
+            BuildingDamageFrames.Add("pyle", 10);
+            BuildingDamageFrames.Add("sam", 64);
+            BuildingDamageFrames.Add("silo", 5);
+            BuildingDamageFrames.Add("weap2", 10);
+            BuildingDamageFrames.Add("v01", 1);
+            BuildingDamageFrames.Add("v02", 1);
+            BuildingDamageFrames.Add("v03", 1);
+            BuildingDamageFrames.Add("v04", 1);
+            BuildingDamageFrames.Add("v05", 1);
+            BuildingDamageFrames.Add("v06", 1);
+            BuildingDamageFrames.Add("v07", 1);
+            BuildingDamageFrames.Add("v08", 1);
+            BuildingDamageFrames.Add("v09", 1);
+            BuildingDamageFrames.Add("v10", 1);
+            BuildingDamageFrames.Add("v11", 1);
+            BuildingDamageFrames.Add("v12", 1);
+            BuildingDamageFrames.Add("v13", 1);
+            BuildingDamageFrames.Add("v14", 1);
+            BuildingDamageFrames.Add("v15", 1);
+            BuildingDamageFrames.Add("v16", 1);
+            BuildingDamageFrames.Add("v17", 1);
+            BuildingDamageFrames.Add("v18", 1);
+            BuildingDamageFrames.Add("v19", 14);
+            BuildingDamageFrames.Add("v20", 3);
+            BuildingDamageFrames.Add("v21", 3);
+            BuildingDamageFrames.Add("v22", 3);
+            BuildingDamageFrames.Add("v23", 3);
+            BuildingDamageFrames.Add("v24", 1);
+            BuildingDamageFrames.Add("v25", 1);
+            BuildingDamageFrames.Add("v26", 1);
+            BuildingDamageFrames.Add("v27", 1);
+            BuildingDamageFrames.Add("v28", 1);
+            BuildingDamageFrames.Add("v29", 1);
+            BuildingDamageFrames.Add("v30", 1);
+            BuildingDamageFrames.Add("v31", 1);
+            BuildingDamageFrames.Add("v32", 1);
+            BuildingDamageFrames.Add("v33", 1);
+            BuildingDamageFrames.Add("v34", 1);
+            BuildingDamageFrames.Add("v35", 1);
+            BuildingDamageFrames.Add("v36", 1);
+            BuildingDamageFrames.Add("v37", 1);
+            BuildingDamageFrames.Add("tmpl", 5);
+        }
+
+        int Frame_From_Building_HP(StructureInfo s)
+        {
+            if (s.HP > 128) { return 0; }
+
+            int Frame;
+            BuildingDamageFrames.TryGetValue(s.Name, out Frame);
+
+            return Frame;
         }
 
         public MapPreviewGenerator(string FileName)
@@ -240,7 +345,7 @@ namespace CncFullMapPreviewGenerator
                     StructureInfo s = new StructureInfo();
                     s.Name = StructData[1];
                     s.Side = StructData[0];
-                    s.State = int.Parse(StructData[4]);
+                    s.Angle = int.Parse(StructData[4]);
                     s.HP = int.Parse(StructData[2]);
                     int CellIndex = int.Parse(StructData[3]);
                     s.Y = CellIndex / 64;
@@ -248,8 +353,34 @@ namespace CncFullMapPreviewGenerator
 
                     Structures.Add(s);
 
-                    Console.WriteLine("structure name = {0}, side {1}, HP = {5}, State = {2}, X = {3}, Y = {4}", s.Name,
-                        s.Side, s.State, s.X, s.Y, s.HP);
+                    if (s.Name.ToLower() == "weap")
+                    {
+                        StructureInfo s2 = new StructureInfo();
+                        s2.Name = "weap2";
+                        s2.Side = s.Side;
+                        s2.Angle = s.Angle;
+                        s2.HP = s.HP;
+                        s2.Y = s.Y;
+                        s2.X = s.X;
+
+                        Structures.Add(s2);
+                    }
+
+                    if (BuildingBibs.ContainsKey(s.Name))
+                    {
+                        BuildingBibInfo bi = new BuildingBibInfo();
+                        BuildingBibs.TryGetValue(s.Name, out bi);
+
+                        BibInfo bib = new BibInfo();
+                        bib.Name = bi.Name; 
+                        bib.X = s.X;
+                        bib.Y = s.Y + bi.Yoffset;
+
+                        Bibs.Add(bib);
+                    }
+
+                    Console.WriteLine("structure name = {0}, side {1}, HP = {5}, Angle = {2}, X = {3}, Y = {4}", s.Name,
+                        s.Side, s.Angle, s.X, s.Y, s.HP);
                 }
             }
         }
@@ -330,6 +461,7 @@ namespace CncFullMapPreviewGenerator
                 }
             }
 
+            Draw_Bibs(g);
             Draw_Structures(g);
             Draw_Units(g);
             Draw_Infantries(g);
@@ -362,7 +494,7 @@ namespace CncFullMapPreviewGenerator
         {
             ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
 
-            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Pal, 0);
+            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Pal, Frame_From_Unit_Angle(u.Angle));
 
             Draw_Centered(g, UnitBitmap, u);
         }
@@ -388,7 +520,7 @@ namespace CncFullMapPreviewGenerator
         {
             ShpReader InfShp = ShpReader.Load(General_File_String_From_Name(inf.Name));
 
-            Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Pal, 0);
+            Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Pal,Frame_From_Infantry_Angle(inf.Angle));
             int subX, subY;
             Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
 
@@ -401,16 +533,50 @@ namespace CncFullMapPreviewGenerator
             {
                 Draw_Structure(s, g);
             }
-
         }
 
         void Draw_Structure(StructureInfo s, Graphics g)
         {
             ShpReader StructShp = ShpReader.Load(General_File_String_From_Name(s.Name));
 
-            Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Pal, 0);
+            Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Pal, Frame_From_Building_HP(s));
 
             g.DrawImage(StructBitmap, s.X * CellSize, s.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
+        }
+
+        void Draw_Bibs(Graphics g)
+        {
+            foreach (BibInfo bib in Bibs)
+            {
+                Draw_Bib(bib, g);
+            }
+        }
+
+        void Draw_Bib(BibInfo bib, Graphics g)
+        {
+            ShpReader BibShp = ShpReader.Load(File_String_From_Name(bib.Name));
+            int Frame = 0;
+
+            int maxY = -1; int maxX = -1;
+            switch (bib.Name.ToLower())
+            {
+                case "bib1": maxY = 2; maxX = 4; break;
+                case "bib2": maxY = 2; maxX = 3; break;
+                case "bib3": maxY = 2; maxX = 2; break;
+                default: break;
+            }
+
+            for (int y = 0; y < maxY; y++)
+            {
+                for (int x = 0; x < maxX; x++)
+                {
+                    Bitmap StructBitmap = RenderUtils.RenderShp(BibShp, Pal, Frame);
+
+                    g.DrawImage(StructBitmap, (bib.X + x) * CellSize, (bib.Y + y) * CellSize, StructBitmap.Width, StructBitmap.Height);
+
+                    Frame++;
+                }
+            }
         }
 
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
@@ -475,6 +641,65 @@ namespace CncFullMapPreviewGenerator
             return false;
         }
 
+        int Frame_From_Infantry_Angle(int Angle)
+        {
+            //            Console.WriteLine("Angle = {0}", Angle);
+
+            if (Angle == 0) { return 0; }
+
+            if (Angle > 224) { return 0; }
+            if (Angle > 192) { return 1; }
+            if (Angle > 160) { return 2; }
+            if (Angle > 128) { return 3; }
+            if (Angle > 96) { return 4; }
+            if (Angle > 64) { return 5; }
+            if (Angle > 32) { return 6; }
+            if (Angle > 0) { return 7; }
+
+            return -1;
+        }
+
+        int Frame_From_Unit_Angle(int Angle)
+        {
+            Console.WriteLine("Angle = {0}", Angle);
+
+            if (Angle== 0) { return 0; }
+
+            if (Angle > 248) { return 0; }
+            if (Angle > 240) { return 1; }
+            if (Angle > 232) { return 2; }
+            if (Angle > 224) { return 3; }
+            if (Angle > 216) { return 4; }
+            if (Angle > 208) { return 5; }
+            if (Angle > 200) { return 6; }
+            if (Angle > 192) { return 7; }
+            if (Angle > 184) { return 8; }
+            if (Angle > 176) { return 9; }
+            if (Angle > 168) { return 10; }
+            if (Angle > 160) { return 11; }
+            if (Angle > 152) { return 12; }
+            if (Angle > 144) { return 13; }
+            if (Angle > 136) { return 14; }
+            if (Angle > 128) { return 15; }
+            if (Angle > 120) { return 16; }
+            if (Angle > 112) { return 17; }
+            if (Angle > 104) { return 18; }
+            if (Angle > 96) { return 19; }
+            if (Angle > 88) { return 20; }
+            if (Angle > 80) { return 21; }
+            if (Angle > 72) { return 22; }
+            if (Angle > 64) { return 23; }
+            if (Angle > 56) { return 24; }
+            if (Angle > 48) { return 25; }
+            if (Angle > 40) { return 26; }
+            if (Angle > 32) { return 27; }
+            if (Angle > 24) { return 28; }
+            if (Angle > 16) { return 29; }
+            if (Angle > 8) { return 30; }
+            if (Angle > 0) { return 31; }
+
+            return -1;
+        }
     }
 
     struct UnitInfo
@@ -499,10 +724,27 @@ namespace CncFullMapPreviewGenerator
     {
         public string Name;
         public string Side;
-        public int State;
+        public int Angle;
         public int X;
         public int Y;
         public int HP;
+    }
+    struct BibInfo
+    {
+        public string Name;
+        public int X;
+        public int Y;
+    }
+    struct BuildingBibInfo
+    {
+        public string Name;
+        public int Yoffset;
+
+        public BuildingBibInfo(string _Name, int _Yoffset)
+        {
+            Name = _Name;
+            Yoffset = _Yoffset;
+        }
     }
 
     struct CellStruct

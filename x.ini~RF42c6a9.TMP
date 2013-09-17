@@ -37,33 +37,9 @@ Count=0
 
 [Infantry]
 0=neutral,c1,256,65,2,guard,0,none
-1=neutral,c1,256,201,1,guard,96,none
+1=neutral,c1,256,201,1,guard,0,none
 
 [Structures]
-0=multi1,gun,256,452,64,none
-1=multi1,v19,256,134,0,none
-2=multi1,afld,256,76,0,none
-3=multi1,bio,256,392,0,none
-4=multi1,eye,256,394,0,none
-5=multi1,eye,256,396,0,none
-6=multi1,fact,256,322,0,none
-7=multi1,fix,256,581,0,none
-8=multi1,hand,256,514,0,none
-9=multi1,hosp,256,390,0,none
-10=multi1,hpad,256,130,0,none
-11=multi1,hq,256,388,0,none
-12=multi1,miss,256,780,0,none
-13=multi1,nuk2,256,720,0,none
-14=multi1,nuk2,256,722,0,none
-15=multi1,proc,256,1039,0,none
-16=multi1,pyle,256,1106,0,none
-17=multi1,pyle,256,916,0,none
-18=multi1,silo,256,1037,0,none
-19=multi1,silo,256,1110,0,none
-20=multi1,silo,256,663,0,none
-21=multi1,weap,256,1294,0,none
-22=multi1,tmpl,256,1305,0,none
-23=multi1,gun,256,971,0,none
 
 [Units]
 0=neutral,harv,256,266,0,guard,none
