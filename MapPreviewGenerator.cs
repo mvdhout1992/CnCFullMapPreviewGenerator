@@ -17,7 +17,10 @@ namespace CncFullMapPreviewGenerator
         IniFile TemplatesINI;
         static IniFile TilesetsINI;
         CellStruct[,] Cells = new CellStruct[64, 64];
-        WaypointStruct[] Waypoints = new WaypointStruct[8];
+        List<WaypointStruct> Waypoints = new List<WaypointStruct>();
+        List<UnitInfo> Units = new List<UnitInfo>();
+        List<InfantryInfo> Infantries = new List<InfantryInfo>();
+
         static Bitmap[] SpawnLocationBitmaps = new Bitmap[8];
         int MapWidth = -1, MapHeight = -1, MapY = -1, MapX = -1;
 
@@ -116,26 +119,87 @@ namespace CncFullMapPreviewGenerator
                 }
             }
 
-            for (int x = 0; x < 64; x++)
+            Parse_Units();
+            Parse_Infantry();
+
+            for (int y = 0; y < 64; y++)
             {
-                for (int y = 0; y < 64; y++)
+                for (int x = 0; x < 64; x++)
                 {
-                    int Index = (x * 64) + y;
+                    int Index = (y * 64) + x;
                     Cells[y, x] = Raw[Index];
 
                     int WayPoint = Raw[Index].Waypoint - 1;
-                    if (WayPoint >= 0 && WayPoint < 8)
+                    if (WayPoint >= 0)
                     {
                         //                        Console.WriteLine("Waypoint found! ID = {0}, Raw = {1}", WayPoint, Index);
 
-                        Waypoints[WayPoint].WasFound = true;
-                        Waypoints[WayPoint].X = x;
-                        Waypoints[WayPoint].Y = y;
+                        Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, Index);
+                        WaypointStruct WP = new WaypointStruct();
+                        WP.Number = WayPoint;
+                        WP.X = x;
+                        WP.Y = y;
+                        Waypoints.Add(WP);
                     }
                 }
             }
         }
 
+        void Parse_Units()
+        {
+            var SectionUnits = MapINI.getSectionContent("Units");
+            if (SectionUnits != null)
+            {
+                foreach (KeyValuePair<string, string> entry in SectionUnits)
+                {
+                    string UnitCommaString = entry.Value;
+                    string[] UnitData = UnitCommaString.Split(',');
+
+                    UnitInfo u = new UnitInfo();
+                    u.Name = UnitData[1];
+                    u.Side = UnitData[0];
+                    u.Angle = int.Parse(UnitData[4]);
+
+                    int CellIndex = int.Parse(UnitData[3]);
+                    u.Y = CellIndex / 64;
+                    u.X = CellIndex % 64;
+
+                    Units.Add(u);
+
+                    Console.WriteLine("Unit name = {0}, side {1}, Angle = {2}, X = {3}, Y = {4}", u.Name,
+                        u.Side, u.Angle, u.X, u.Y);
+                }
+            }
+        }
+
+        void Parse_Infantry()
+        {
+            // 0=neutral,c1,256,2973,2,guard,3,none
+            var SectionInfantry = MapINI.getSectionContent("Infantry");
+            if (SectionInfantry != null)
+            {
+                foreach (KeyValuePair<string, string> entry in SectionInfantry)
+                {
+                    string InfCommaString = entry.Value;
+                    string[] InfData = InfCommaString.Split(',');
+
+                    InfantryInfo inf = new InfantryInfo();
+                    inf.Name = InfData[1];
+                    inf.Side = InfData[0];
+                    inf.Angle = int.Parse(InfData[6]);
+                    inf.SubCell = int.Parse(InfData[4]);
+
+                    int CellIndex = int.Parse(InfData[3]);
+                    inf.Y = CellIndex / 64;
+                    inf.X = CellIndex % 64;
+
+                    Infantries.Add(inf);
+
+                    Console.WriteLine("infantry name = {0}, Side = {1}, Angle = {2}, SubCell = {5}, X = {3}, Y = {4}", inf.Name,
+                        inf.Side, inf.Angle, inf.X, inf.Y, inf.SubCell);
+                }
+            }
+        }
 
         public Bitmap Get_Bitmap()
         {
@@ -258,6 +322,25 @@ namespace CncFullMapPreviewGenerator
 
     }
 
+    struct UnitInfo
+    {
+        public string Name;
+        public string Side;
+        public int Angle;
+        public int X;
+        public int Y;
+    }
+
+    struct InfantryInfo
+    {
+        public string Name;
+        public string Side;
+        public int Angle;
+        public int X;
+        public int Y;
+        public int SubCell;
+    }
+
     struct CellStruct
     {
         public int Template;
@@ -269,7 +352,7 @@ namespace CncFullMapPreviewGenerator
 
     struct WaypointStruct
     {
-        public bool WasFound;
+        public int Number;
         public int X;
         public int Y;
     }
