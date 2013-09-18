@@ -1000,9 +1000,12 @@ Multi6	 Choosable	 Red */
 
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
         {
-//            if (Cell.Tile != 0 ) { return; }
+          if (Cell.Template == 255  && Cell.Tile == 0) 
+          {
+              Cell.Tile = MapRandom.Next(0, 15);
+          }
 
-            string TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "0");
+            string TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "CLEAR1");
 
             TemplateReader Temp = TemplateReader.Load(File_String_From_Name(TemplateString));
 
@@ -1025,15 +1028,22 @@ Multi6	 Choosable	 Red */
             string Overlay = Cell.Overlay;
             int Frame = 0;
 
-            if (TiberiumStages.ContainsKey(Overlay))
+            if (TiberiumStages.ContainsKey(Overlay.ToLower()))
             {
                 Frame = -1;
-                TiberiumStages.TryGetValue(Overlay, out Frame);
+                TiberiumStages.TryGetValue(Overlay.ToLower(), out Frame);
                 int index = MapRandom.Next(1, 12); // creates a number between 1 and 12
                 Overlay = string.Format("TI{0}", index);
             }
 
-            ShpReader Shp = ShpReader.Load(File_String_From_Name(Overlay));
+            string FilePath = File_String_From_Name(Overlay);
+
+            if (!File.Exists(FilePath))
+            {
+                FilePath = General_File_String_From_Name(Overlay);
+            }
+
+            ShpReader Shp = ShpReader.Load(FilePath);
 
             Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, Frame);
             g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
