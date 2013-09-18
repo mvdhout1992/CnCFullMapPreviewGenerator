@@ -27,6 +27,7 @@ namespace CncFullMapPreviewGenerator
         List<InfantryInfo> Infantries = new List<InfantryInfo>();
         List<SmudgeInfo> Smudges = new List<SmudgeInfo>();
         List<StructureInfo> Structures = new List<StructureInfo>();
+        List<CellTriggerInfo> CellsTriggers = new List<CellTriggerInfo>();
         Dictionary<string, Palette> ColorRemaps = new Dictionary<string, Palette>();
         List<BibInfo> Bibs = new List<BibInfo>();
         static Dictionary<string, BuildingBibInfo> BuildingBibs = new Dictionary<string, BuildingBibInfo>();
@@ -348,19 +349,6 @@ namespace CncFullMapPreviewGenerator
                             }));
         }
 
-        /*
-GoodGuy	 GDI	 Gold
-BadGuy	 NOD	 Red structures, silver units
-Special	 None	 Gold
-Neutral	 None (Civilians)	 Gold
-Multi1	 Choosable	 Teal
-Multi2	 Choosable	 Orange
-Multi3	 Choosable	 Lime
-Multi4	 Choosable	 Silver
-Multi5	 Choosable	 Gold
-Multi6	 Choosable	 Red */
-
-
         public void Load_House_Colors()
         {
             HouseColors.Add("badguy", new HouseInfo("Red", "Gray"));
@@ -502,6 +490,7 @@ Multi6	 Choosable	 Red */
             Parse_Units();
             Parse_Infantry();
             Parse_Structures();
+            Parse_Cell_Triggers();
 
             for (int x = 0; x < 64; x++)
             {
@@ -545,6 +534,27 @@ Multi6	 Choosable	 Red */
                     Raw[Cell].Overlay = Overlay;
 
                     //                Console.WriteLine("{0} = {1}", Cell, Terrain);
+                }
+            }
+        }
+
+        void Parse_Cell_Triggers()
+        {
+            var SectionCellTriggers = MapINI.getSectionContent("CellTriggers");
+
+            if (SectionCellTriggers != null)
+            {
+                foreach (KeyValuePair<string, string> entry in SectionCellTriggers)
+                {
+                    int CellIndex = int.Parse(entry.Key);
+                    string Name = entry.Value;
+
+                    CellTriggerInfo c = new CellTriggerInfo();
+                    c.Name = Name;
+                    c.Y = CellIndex / 64;
+                    c.X = CellIndex % 64;
+
+                    CellsTriggers.Add(c);
                 }
             }
         }
@@ -671,7 +681,7 @@ Multi6	 Choosable	 Red */
 
                     // 0=neutral,afld,256,6,0,none
                     StructureInfo s = new StructureInfo();
-                    s.Name = StructData[1];
+                    s.Name = StructData[1].ToLower();
                     s.Side = StructData[0];
                     s.Angle = int.Parse(StructData[4]);
                     s.HP = int.Parse(StructData[2]);
@@ -762,6 +772,26 @@ Multi6	 Choosable	 Red */
                 }
             }
 
+
+            for (int y = 0; y < 64; y++)
+            {
+                for (int x = 0; x < 64; x++)
+                {
+                    CellStruct data = Cells[x, y];
+
+                    if (data.Overlay != null)
+                    {
+                        Draw_Overlay(data, g, x, y);
+                    }
+                }
+            }
+
+            Draw_Smudges(g);
+            Draw_Bibs(g);
+            Draw_Structures(g);
+            Draw_Units(g);
+            Draw_Infantries(g);
+
             for (int y = 0; y < 64; y++)
             {
                 for (int x = 0; x < 64; x++)
@@ -775,26 +805,8 @@ Multi6	 Choosable	 Red */
                 }
             }
 
-
-            for (int y = 0; y < 64; y++)
-            {
-                for (int x = 0; x < 64; x++)
-                {
-                    CellStruct data = Cells[x, y];
-
-                    if (data.Overlay != null)
-                    {
-                         Draw_Overlay(data, g, x, y);
-                    }
-                }
-            }
-
-            Draw_Smudges(g);
-            Draw_Bibs(g);
-            Draw_Structures(g);
-            Draw_Units(g);
-            Draw_Infantries(g);
             Draw_Waypoints(g);
+            Draw_Cell_Triggers(g);
 
             for (int y = 0; y < 64; y++)
             {
@@ -840,18 +852,16 @@ Multi6	 Choosable	 Red */
                 TemplateReader.TileSize, TemplateReader.TileSize);
         }
 
-        void Draw_Text(Graphics g, string text, int x, int y)
+        void Draw_Text(Graphics g, string text, Font font, Brush brush, int x, int y)
         {
-            int X_Adjust = 7;
-            if (text.Length == 2) X_Adjust = 5;
-  
-            RectangleF rectf = new RectangleF(x * TemplateReader.TileSize + X_Adjust, y * TemplateReader.TileSize + 6, 
+            RectangleF rectf = new RectangleF(x, y, 
                 TemplateReader.TileSize, TemplateReader.TileSize);
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            g.DrawString(text, new Font("Thaoma", 8), Brushes.GreenYellow, rectf);
+//            g.DrawString(text, new Font("Thaoma", 7), Brushes.GreenYellow, rectf);
+            g.DrawString(text, font, brush, rectf);
         }
 
         void Draw_Rectangle(Graphics g, int x, int y)
@@ -865,8 +875,23 @@ Multi6	 Choosable	 Red */
         {
             foreach (WaypointStruct wp in Waypoints)
             {
-                Draw_Text(g, wp.Number.ToString(), wp.X, wp.Y);
+                string text = wp.Number.ToString();
+                int X_Adjust = 7;
+                if (text.Length == 2) X_Adjust = 5;
+
+                Draw_Text(g, wp.Number.ToString(), new Font("Thaoma", 8), Brushes.GreenYellow, 
+                    (TemplateReader.TileSize * wp.X) + X_Adjust, (wp.Y * TemplateReader.TileSize) + 6);
                 Draw_Rectangle(g, wp.X, wp.Y);
+            }
+
+        }
+
+        void Draw_Cell_Triggers(Graphics g)
+        {
+            foreach (CellTriggerInfo c in CellsTriggers)
+            {
+                Draw_Text(g, c.Name, new Font("Thaoma", 7), Brushes.Aqua,
+                    c.X * TemplateReader.TileSize, (c.Y * TemplateReader.TileSize) + 6);
             }
 
         }
@@ -895,6 +920,16 @@ Multi6	 Choosable	 Red */
                 Frame_From_Unit_Angle(u.Angle));
 
             Draw_Centered(g, UnitBitmap, u);
+
+            // Draw vehicle turret
+            string Name = u.Name.ToLower();
+            if (Name == "htnk" || Name == "ltnk" || Name == "mtnk")
+            {
+                Bitmap TurretBitmap = RenderUtils.RenderShp(UnitShp, Remap,
+                    Frame_From_Unit_Angle(u.Angle) + 32);
+
+                Draw_Centered(g, TurretBitmap, u);
+            }
         }
 
         void Draw_Centered(Graphics g, Bitmap bitMap, UnitInfo u)
@@ -1025,7 +1060,7 @@ Multi6	 Choosable	 Red */
 
         void Draw_Overlay(CellStruct Cell, Graphics g, int X, int Y)
         {
-            string Overlay = Cell.Overlay;
+            string Overlay = Cell.Overlay.ToLower();
             int Frame = 0;
 
             if (TiberiumStages.ContainsKey(Overlay.ToLower()))
@@ -1045,8 +1080,74 @@ Multi6	 Choosable	 Red */
 
             ShpReader Shp = ShpReader.Load(FilePath);
 
+            if (Is_Fence(Overlay))
+            {
+                Frame = Frame_For_Fence(Overlay, X, Y);
+            }
+
             Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, Frame);
             g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
+        }
+
+        int Frame_For_Fence(string Name, int X, int Y)
+        {
+            bool Top = Cell_Contains_Same_Overlay(X, Y - 1, Name);
+            bool Bottom = Cell_Contains_Same_Overlay(X, Y + 1, Name);
+            bool Left = Cell_Contains_Same_Overlay(X - 1, Y, Name);
+            bool Right = Cell_Contains_Same_Overlay(X + 1, Y, Name);
+
+            if (Top == true && Bottom == true && Left == true && Right == true)
+            {
+                return 15;
+            }
+
+            if (Top == true && Left == true && Right == true) { return 11; }
+            if (Top == true && Right == true && Bottom == true) { return 7; }
+            if (Top == true && Left == true && Bottom == true) { return 13; }
+            if (Right == true && Left == true && Bottom == true) { return 13; }
+
+            if (Top == true && Right == true) { return 3; }
+            if (Bottom == true && Right == true) { return 6; }
+            if (Bottom == true && Top == true) { return 5; }
+            if (Top == true && Left == true) { return 9; }
+            if (Right == true && Left == true) { return 10; }
+            if (Left == true && Bottom == true) { return 12; }
+
+            if (Top == true) { return 1; }
+            if (Bottom == true) { return 4; }
+            if (Left == true) { return 8; }
+            if (Right == true) { return 2; }
+
+            return 0;
+        }
+
+        bool Cell_Contains_Same_Overlay(int X, int Y, string Name)
+        {
+            if (Y < 0 || X < 0) return false;
+            if (Y > 64 || X > 64) return false;
+
+            if (Cells[X, Y].Overlay == null) return false;
+            if (Cells[X, Y].Overlay.ToLower() == Name) return true;
+
+            return false;
+        }
+
+        bool Is_Fence(string Name)
+        {
+            bool ret = false;
+
+            switch (Name.ToLower())
+            {
+                case "barb":
+                case "wood":
+                case "sbag":
+                case "cycl":
+                case "brik":
+                ret = true; break;
+                default: break;
+            }
+
+            return ret;
         }
 
         void Draw_Terrain(CellStruct Cell, Graphics g, int X, int Y)
@@ -1194,6 +1295,13 @@ Multi6	 Choosable	 Red */
             SecondaryColor = _SecondaryColor;
             PrimaryColor = _PrimaryColor;
         }
+    }
+
+    struct CellTriggerInfo
+    {
+        public string Name;
+        public int X;
+        public int Y;
     }
 
     struct CellStruct
