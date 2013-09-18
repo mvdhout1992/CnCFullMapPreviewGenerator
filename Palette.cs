@@ -93,28 +93,31 @@ namespace CncFullMapPreviewGenerator
                 // 		RemapIndex: 176, 178, 180, 182, 184, 186, 189, 191, 177, 179, 181, 183, 185, 187, 188, 190
                 Palette p = new Palette(s, shadowreamp);
                 p.colors[176] = Value_From_RGB(remaps[0]);
-                p.colors[178] = Value_From_RGB(remaps[1]);
-                p.colors[180] = Value_From_RGB(remaps[2]);
-                p.colors[182] = Value_From_RGB(remaps[3]);
-                p.colors[184] = Value_From_RGB(remaps[4]);
-                p.colors[186] = Value_From_RGB(remaps[5]);
-                p.colors[189] = Value_From_RGB(remaps[6]);
-                p.colors[191] = Value_From_RGB(remaps[7]);
-                p.colors[177] = Value_From_RGB(remaps[8]);
-                p.colors[179] = Value_From_RGB(remaps[9]);
-                p.colors[181] = Value_From_RGB(remaps[10]);
-                p.colors[183] = Value_From_RGB(remaps[11]);
-                p.colors[185] = Value_From_RGB(remaps[12]);
-                p.colors[187] = Value_From_RGB(remaps[13]);
-                p.colors[188] = Value_From_RGB(remaps[14]);
-                p.colors[190] = Value_From_RGB(remaps[15]);
+                p.colors[177] = Value_From_RGB(remaps[1]);
+                p.colors[178] = Value_From_RGB(remaps[2]);
+                p.colors[179] = Value_From_RGB(remaps[3]);
+                p.colors[180] = Value_From_RGB(remaps[4]);
+                p.colors[181] = Value_From_RGB(remaps[5]);
+                p.colors[182] = Value_From_RGB(remaps[6]);
+                p.colors[183] = Value_From_RGB(remaps[7]);
+                p.colors[184] = Value_From_RGB(remaps[8]);
+                p.colors[185] = Value_From_RGB(remaps[9]);
+                p.colors[186] = Value_From_RGB(remaps[10]);
+                p.colors[187] = Value_From_RGB(remaps[11]);
+                p.colors[188] = Value_From_RGB(remaps[12]);
+                p.colors[189] = Value_From_RGB(remaps[13]);
+                p.colors[190] = Value_From_RGB(remaps[14]);
+                p.colors[191] = Value_From_RGB(remaps[15]);
 
                 return p;
             }
         }
         public static uint Value_From_RGB(RGB rgb)
         {
-            return (uint)((255 << 24) | (rgb.R << 16) | (rgb.G << 8) | rgb.B);
+            byte r = rgb.R;
+            byte g = rgb.G;
+            byte b = rgb.B;
+            return (uint)((255 << 24) | (r << 16) | (g << 8) | b);
         }
     }
 

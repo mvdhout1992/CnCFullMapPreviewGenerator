@@ -9,7 +9,7 @@ namespace CncFullMapPreviewGenerator
 {
     class Program
     {
-        static void Main2(string[] args)
+        static void Main(string[] args)
         {
             // Make sure the Parse() functions parse commas and periods correctly
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -22,7 +22,7 @@ namespace CncFullMapPreviewGenerator
         }
 
 
-        static void Main(string[] args)
+        static void Main2(string[] args)
         {
             int[] ShadowIndex = { 3, 4 };
             RGB[] Remaps = { 

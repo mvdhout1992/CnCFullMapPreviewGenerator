@@ -225,6 +225,28 @@ New added pale brown scheme */
 
         public void Load_House_Colors()
         {
+            HouseColors.Add("BadGuy", new HouseInfo("Red", "Red"));
+        }
+
+        public Palette Remap_For_House(string HouseName, ColorScheme Scheme)
+        {
+            string Colour = "None";
+
+            HouseInfo House = new HouseInfo();
+            HouseColors.TryGetValue(HouseName, out House);
+
+            switch (Scheme)
+            {
+                case ColorScheme.Primary: Colour = House.PrimaryColor; break;
+                case ColorScheme.Secondary: Colour = House.SecondaryColor; break;
+                default: break;
+            }
+
+            Colour = "Red"; // debug
+
+            Palette Pal = this.Pal;
+            ColorRemaps.TryGetValue(Colour, out Pal);
+            return Pal;
         }
 
         public MapPreviewGenerator(string FileName)
@@ -620,7 +642,8 @@ New added pale brown scheme */
         {
             ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
 
-            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Pal, Frame_From_Unit_Angle(u.Angle));
+            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Remap_For_House(u.Side, ColorScheme.Secondary), 
+                Frame_From_Unit_Angle(u.Angle));
 
             Draw_Centered(g, UnitBitmap, u);
         }
@@ -646,7 +669,9 @@ New added pale brown scheme */
         {
             ShpReader InfShp = ShpReader.Load(General_File_String_From_Name(inf.Name));
 
-            Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Pal,Frame_From_Infantry_Angle(inf.Angle));
+            Bitmap TempBitmap = RenderUtils.RenderShp(InfShp, Remap_For_House(inf.Side, ColorScheme.Secondary), 
+                Frame_From_Infantry_Angle(inf.Angle));
+
             int subX, subY;
             Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
 
@@ -665,7 +690,8 @@ New added pale brown scheme */
         {
             ShpReader StructShp = ShpReader.Load(General_File_String_From_Name(s.Name));
 
-            Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Pal, Frame_From_Building_HP(s));
+            Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Remap_For_House(s.Side, ColorScheme.Primary), 
+                Frame_From_Building_HP(s));
 
             g.DrawImage(StructBitmap, s.X * CellSize, s.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
         }
@@ -953,5 +979,10 @@ New added pale brown scheme */
             G = G_;
             B = B_;
         }
+    }
+    enum ColorScheme
+    {
+        Primary,
+        Secondary
     }
 }
