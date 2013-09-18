@@ -412,7 +412,7 @@ Multi6	 Choosable	 Red */
 
             string MapBin = FileName.Replace(".ini", ".bin");
 
-            Console.WriteLine("MapBin = {0}, FileName = {1}", MapBin, FileName);
+//            Console.WriteLine("MapBin = {0}, FileName = {1}", MapBin, FileName);
 
             CellStruct[] Raw = new CellStruct[64*64];
 
@@ -463,7 +463,7 @@ Multi6	 Choosable	 Red */
                 int WayPoint = int.Parse(entry.Key);
                 int CellIndex = int.Parse(entry.Value);
 
-                Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, CellIndex);
+ //               Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, CellIndex);
                 WaypointStruct WP = new WaypointStruct();
                 WP.Number = WayPoint;
                 WP.X =  CellIndex % 64;
@@ -572,8 +572,8 @@ Multi6	 Choosable	 Red */
 
                     Units.Add(u);
 
-                    Console.WriteLine("Unit name = {0}, side {1}, Angle = {2}, X = {3}, Y = {4}", u.Name,
-                        u.Side, u.Angle, u.X, u.Y);
+ //                   Console.WriteLine("Unit name = {0}, side {1}, Angle = {2}, X = {3}, Y = {4}", u.Name,
+   //                     u.Side, u.Angle, u.X, u.Y);
                 }
             }
         }
@@ -648,8 +648,8 @@ Multi6	 Choosable	 Red */
                         Bibs.Add(bib);
                     }
 
-                    Console.WriteLine("structure name = {0}, side {1}, HP = {5}, Angle = {2}, X = {3}, Y = {4}", s.Name,
-                        s.Side, s.Angle, s.X, s.Y, s.HP);
+ //                   Console.WriteLine("structure name = {0}, side {1}, HP = {5}, Angle = {2}, X = {3}, Y = {4}", s.Name,
+   //                     s.Side, s.Angle, s.X, s.Y, s.HP);
                 }
             }
         }
@@ -681,8 +681,8 @@ Multi6	 Choosable	 Red */
                     int subX; int subY;
                     Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
 
-                    Console.WriteLine("infantry name = {0}, Side = {1}, Angle = {2}, SubCell = {5}, X = {3}, Y = {4}", inf.Name,
-                        inf.Side, inf.Angle, inf.X + subX, inf.Y + subY, inf.SubCell);
+//                    Console.WriteLine("infantry name = {0}, Side = {1}, Angle = {2}, SubCell = {5}, X = {3}, Y = {4}", inf.Name,
+//                        inf.Side, inf.Angle, inf.X + subX, inf.Y + subY, inf.SubCell);
                 }
             }
         }
@@ -1021,7 +1021,7 @@ Multi6	 Choosable	 Red */
 
         int Frame_From_Unit_Angle(int Angle)
         {
-            Console.WriteLine("Angle = {0}", Angle);
+//            Console.WriteLine("Angle = {0}", Angle);
 
             if (Angle== 0) { return 0; }
 
