@@ -1112,7 +1112,7 @@ namespace CncFullMapPreviewGenerator
             if (Top == true && Left == true && Right == true) { return 11; }
             if (Top == true && Right == true && Bottom == true) { return 7; }
             if (Top == true && Left == true && Bottom == true) { return 13; }
-            if (Right == true && Left == true && Bottom == true) { return 13; }
+            if (Right == true && Left == true && Bottom == true) { return 14; }
 
             if (Top == true && Right == true) { return 3; }
             if (Bottom == true && Right == true) { return 6; }
@@ -1164,7 +1164,14 @@ namespace CncFullMapPreviewGenerator
 
             ShpReader Shp = ShpReader.Load(File_String_From_Name(TerrainData[0]));
 
-            Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, 0);
+            int Frame = 0;
+
+            if (TerrainData[0].ToLower().Contains("split"))
+            {
+                Frame = 54;
+            }
+
+            Bitmap ShpBitmap = RenderUtils.RenderShp(Shp, Pal, Frame);
             g.DrawImage(ShpBitmap, X * CellSize, Y * CellSize, ShpBitmap.Width, ShpBitmap.Height);
         }
 
