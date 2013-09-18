@@ -878,7 +878,7 @@ namespace CncFullMapPreviewGenerator
             {
                 string text = wp.Number.ToString();
                 int X_Adjust = 8;
-                if (text.Length == 2) X_Adjust = 5;
+                if (text.Length == 2) X_Adjust = 4;
 
                 Draw_Text(g, wp.Number.ToString(), new Font("Thaoma", 8), Brushes.GreenYellow, 
                     (TemplateReader.TileSize * wp.X) + X_Adjust, (wp.Y * TemplateReader.TileSize) + 6);
