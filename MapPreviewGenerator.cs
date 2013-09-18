@@ -155,52 +155,12 @@ namespace CncFullMapPreviewGenerator
 
             return Frame;
         }
-/*
-GoodGuy	 GDI	 Gold
-BadGuy	 NOD	 Red structures, silver units
-Special	 None	 Gold
-Neutral	 None (Civilians)	 Gold
-Multi1	 Choosable	 Teal
-Multi2	 Choosable	 Orange
-Multi3	 Choosable	 Lime
-Multi4	 Choosable	 Silver
-Multi5	 Choosable	 Gold
-Multi6	 Choosable	 Red */
-
-/*
-GDI:
-GDI yellow. Has slightly different radar colors than multiplayer yellow.
-Nod
-Nod's scheme, with grey units, red buildings and red radar colors.
-Yellow:
-Multiplayer yellow.
-Red:
-Multiplayer red.
-Teal:
-Multiplayer teal (blue/greenish).
-Orange:
-Multiplayer orange.
-Green:
-Multiplayer green.
-Grey:
-Multiplayer grey (metallic / urban camo).
-Neutral:
-Standard yellow, but with grey radar colors. Used by [Neutral] and [Special].
-Jurassic:
-Standard yellow, but with red radar colors. Used by the [Special] side dinosaurs in the Funpark missions.
-DarkGrey:
-New added dark grey scheme
-Brown:
-New added brown scheme
-Fire:
-New added bright yellow/orange scheme
-WarmSilver:
-New added pale brown scheme */
-
 
         void Load_Remap_Palettes()
         {
             int[] ShadowIndex = { 3, 4 };
+
+            ColorRemaps.Add("Yellow", Palette.Load("data/" + Theater + "/" + PalName + ".pal", ShadowIndex));
 
             ColorRemaps.Add("Red", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
             new RGB[] {
@@ -221,11 +181,117 @@ New added pale brown scheme */
                                new RGB(56, 32, 20), // 120
                                new RGB(56, 32, 20), // 120                 
                             }));
+
+            ColorRemaps.Add("Teal", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            new RGB[] {
+                // RemapIndexes=2,119,118,135,136,138,112,12,118,135,136,137,138,139,114,112
+                               new RGB(0, 168, 168), // 2
+                               new RGB(116, 148, 156), // 119
+                               new RGB(100, 128, 136), // 118
+                               new RGB(0, 112, 112), // 135
+                               new RGB(4, 92, 100), // 136
+                               new RGB(16, 60, 80), // 138
+                               new RGB(4, 4, 8), // 112
+                               new RGB(0, 0, 0), // 12
+                               new RGB(100, 128, 136), // 118
+                               new RGB(0, 112, 112), // 135
+                               new RGB(4, 92, 100), // 136
+                               new RGB(8, 76, 92), // 137
+                               new RGB(16, 60, 80), // 138
+                               new RGB(20, 52, 72), // 139
+                               new RGB(36, 44, 62), // 114
+                               new RGB(4, 4, 8), // 112                 
+                            }));
+            ColorRemaps.Add("Orange", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+new RGB[] {
+                // RemapIndexes=24,25,26,27,29,31,46,47,26,27,28,29,30,31,43,47
+                               new RGB(236, 172, 72), // 24
+                               new RGB(228, 148, 48), // 25
+                               new RGB(212, 120, 16), // 26
+                               new RGB(196, 96, 0), // 27
+                               new RGB(164, 56, 0), // 29
+                               new RGB(136, 24, 0), // 31
+                               new RGB(96, 8, 0), // 46
+                               new RGB(16, 0, 0), // 47
+                               new RGB(212, 120, 16), // 26
+                               new RGB(196, 96, 0), // 27
+                               new RGB(180, 72, 0), // 28
+                               new RGB(164, 56, 0), // 29
+                               new RGB(152, 40, 0), // 30
+                               new RGB(136, 24, 0), // 31
+                               new RGB(112, 8, 0), // 43
+                               new RGB(16, 0, 0), // 47          
+                            }));
+
+            ColorRemaps.Add("Green", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+new RGB[] {
+                // RemapIndexes=5,165,166,167,159,142,140,199,166,167,157,3,159,143,142,141
+                               new RGB(252, 252, 84), // 5
+                               new RGB(208, 240, 0), // 165
+                               new RGB(160, 224, 28), // 166
+                               new RGB(140, 200, 8), // 167
+                               new RGB(60, 152, 56), // 159
+                               new RGB(60, 100, 56), // 142
+                               new RGB(40, 68, 36), // 140
+                               new RGB(24, 24, 24), // 199
+                               new RGB(160, 224, 28), // 166
+                               new RGB(140, 200, 8), // 167
+                               new RGB(172, 176, 32), // 157
+                               new RGB(0, 168, 0), // 3
+                               new RGB(60, 152, 56), // 159
+                               new RGB(60, 100, 56), // 142
+                               new RGB(60, 100, 56), // 142
+                               new RGB(48, 84, 44), // 141        
+                            }));
+
+            ColorRemaps.Add("Gray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+new RGB[] {
+                // RemapIndexes=161,200,201,202,204,205,206,12,201,202,203,204,205,115,198,114
+                               new RGB(216, 252, 252), // 161
+                               new RGB(220, 220, 228), // 200
+                               new RGB(192, 192, 228), // 201
+                               new RGB(164, 164, 188), // 202
+                               new RGB(100, 100, 124), // 204
+                               new RGB(72, 72, 92), // 205
+                               new RGB(44, 44, 60), // 206
+                               new RGB(0, 0, 0), // 12
+                               new RGB(192, 192, 228), // 201
+                               new RGB(164, 164, 188), // 202
+                               new RGB(132, 132, 156), // 203
+                               new RGB(100, 100, 124), // 204
+                               new RGB(72, 72, 92), // 205
+                               new RGB(60, 100, 56), // 115 TBD
+                               new RGB(60, 100, 56), // 198
+                               new RGB(48, 84, 44), // 114        
+                            }));
         }
+
+        /*
+GoodGuy	 GDI	 Gold
+BadGuy	 NOD	 Red structures, silver units
+Special	 None	 Gold
+Neutral	 None (Civilians)	 Gold
+Multi1	 Choosable	 Teal
+Multi2	 Choosable	 Orange
+Multi3	 Choosable	 Lime
+Multi4	 Choosable	 Silver
+Multi5	 Choosable	 Gold
+Multi6	 Choosable	 Red */
+
 
         public void Load_House_Colors()
         {
-            HouseColors.Add("BadGuy", new HouseInfo("Red", "Red"));
+            HouseColors.Add("badguy", new HouseInfo("Red", "Gray"));
+            HouseColors.Add("goodguy", new HouseInfo("Yellow", "Yellow"));
+            HouseColors.Add("special", new HouseInfo("Yellow", "Yellow"));
+            HouseColors.Add("neutral", new HouseInfo("Yellow", "Yellow"));
+
+            HouseColors.Add("multi1", new HouseInfo("Teal", "Teal"));
+            HouseColors.Add("multi2", new HouseInfo("Orange", "Orange"));
+            HouseColors.Add("multi3", new HouseInfo("Green", "Green"));
+            HouseColors.Add("multi4", new HouseInfo("Gray", "Gray"));
+            HouseColors.Add("multi5", new HouseInfo("Yellow", "Yellow"));
+            HouseColors.Add("multi6", new HouseInfo("Red", "Red"));
         }
 
         public Palette Remap_For_House(string HouseName, ColorScheme Scheme)
@@ -233,7 +299,7 @@ New added pale brown scheme */
             string Colour = "None";
 
             HouseInfo House = new HouseInfo();
-            HouseColors.TryGetValue(HouseName, out House);
+            HouseColors.TryGetValue(HouseName.ToLower(), out House);
 
             switch (Scheme)
             {
@@ -242,7 +308,6 @@ New added pale brown scheme */
                 default: break;
             }
 
-            Colour = "Red"; // debug
 
             Palette Pal = this.Pal;
             ColorRemaps.TryGetValue(Colour, out Pal);
@@ -642,7 +707,14 @@ New added pale brown scheme */
         {
             ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
 
-            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Remap_For_House(u.Side, ColorScheme.Secondary), 
+            Palette Remap = Remap_For_House(u.Side, ColorScheme.Secondary);
+
+            if (u.Name == "HARV" || u.Name == "MCV")
+            {
+                Remap = Remap_For_House(u.Side, ColorScheme.Primary);
+            }
+
+            Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Remap, 
                 Frame_From_Unit_Angle(u.Angle));
 
             Draw_Centered(g, UnitBitmap, u);
