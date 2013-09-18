@@ -368,7 +368,8 @@ namespace CncFullMapPreviewGenerator
                 string sect = section.ToLower();
                 if (HouseColors.ContainsKey(sect))
                 {
-                    Console.WriteLine("section = {0}", sect);
+//                    Console.WriteLine("section = {0}", sect);
+
                     HouseInfo House = new HouseInfo();
                     HouseColors.TryGetValue(sect, out House);
 
@@ -386,8 +387,8 @@ namespace CncFullMapPreviewGenerator
             HouseInfo BadGuy = new HouseInfo();
             HouseColors.TryGetValue("badguy", out BadGuy);
 
-            Console.WriteLine("PrimaryColor = {0}, SecondaryColor = {1}",
-                BadGuy.PrimaryColor, BadGuy.SecondaryColor);
+//            Console.WriteLine("PrimaryColor = {0}, SecondaryColor = {1}",
+ //               BadGuy.PrimaryColor, BadGuy.SecondaryColor);
         }
 
         void Parse_Primary_Color(ref HouseInfo House, string color)
@@ -876,7 +877,7 @@ namespace CncFullMapPreviewGenerator
             foreach (WaypointStruct wp in Waypoints)
             {
                 string text = wp.Number.ToString();
-                int X_Adjust = 7;
+                int X_Adjust = 8;
                 if (text.Length == 2) X_Adjust = 5;
 
                 Draw_Text(g, wp.Number.ToString(), new Font("Thaoma", 8), Brushes.GreenYellow, 
@@ -972,7 +973,14 @@ namespace CncFullMapPreviewGenerator
 
         void Draw_Structure(StructureInfo s, Graphics g)
         {
-            ShpReader StructShp = ShpReader.Load(General_File_String_From_Name(s.Name));
+            string FileName = General_File_String_From_Name(s.Name);
+
+            if (!File.Exists(FileName))
+            {
+                FileName = File_String_From_Name(s.Name);
+            }
+
+            ShpReader StructShp = ShpReader.Load(FileName);
 
             Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Remap_For_House(s.Side, ColorScheme.Primary), 
                 Frame_From_Building_HP(s));

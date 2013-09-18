@@ -11,14 +11,28 @@ namespace CncFullMapPreviewGenerator
     {
         static void Main(string[] args)
         {
+            if (args.Length < 2)
+            {
+                Console.WriteLine("ERROR: Not enough arguments, at least 2 are needed.");
+                Console.WriteLine("Usage: ExeFile InputMap OutputImage [--DrawVisibleOnly]");
+                return;
+            }
+
+            bool DrawVisibleOnly = false;
+
+            if (args.Length > 2)
+            {
+                DrawVisibleOnly = args[2].ToLower() == "--drawvisibleonly";
+            }
+
             // Make sure the Parse() functions parse commas and periods correctly
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             MapPreviewGenerator.Load();
 
-            var MapPreview = new MapPreviewGenerator("x.ini");
-            MapPreview.Get_Bitmap(OnlyDrawVisible:true).Save("derp.png");
+            var MapPreview = new MapPreviewGenerator(args[0]);
+            MapPreview.Get_Bitmap(DrawVisibleOnly).Save(args[1]);
         }
 
 
