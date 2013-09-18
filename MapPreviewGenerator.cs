@@ -687,7 +687,7 @@ Multi6	 Choosable	 Red */
             }
         }
 
-        public Bitmap Get_Bitmap()
+        public Bitmap Get_Bitmap(bool OnlyDrawVisible)
         {
             Bitmap bitMap = new Bitmap(64 * CellSize, 64 * CellSize);
             Graphics g = Graphics.FromImage(bitMap);
@@ -737,12 +737,48 @@ Multi6	 Choosable	 Red */
             Draw_Infantries(g);
             Draw_Waypoints(g);
 
-/*            if (Is_Out_Of_Bounds(x, y))
+            for (int y = 0; y < 64; y++)
             {
-                // whatever
-            }*/
+                for (int x = 0; x < 64; x++)
+                {
+                    if (Is_Out_Of_Bounds(x, y))
+                    {
+                        Draw_Out_Of_Bounds(g, x, y);
+                    }
+                }
+            }
+
+
+            if (OnlyDrawVisible)
+            {
+                bitMap = Get_In_Bounds_Region(bitMap);
+            }
 
             return bitMap;
+        }
+
+        Bitmap Get_In_Bounds_Region(Bitmap srcBitmap)
+        {
+            Rectangle section = new Rectangle(MapX * TemplateReader.TileSize,
+                MapY * TemplateReader.TileSize, MapWidth * TemplateReader.TileSize,
+                MapHeight * TemplateReader.TileSize);
+
+
+
+            Bitmap bmp = new Bitmap(section.Width, section.Height);
+            Graphics g = Graphics.FromImage(bmp);
+
+            // Draw the specified section of the source bitmap to the new one
+            g.DrawImage(srcBitmap, 0, 0, section, GraphicsUnit.Pixel);
+
+            return bmp;
+        }
+
+        void Draw_Out_Of_Bounds(Graphics g, int x, int y)
+        {
+            g.FillRectangle(new SolidBrush(Color.FromArgb(45, 0, 162, 232)),
+                x * TemplateReader.TileSize, y * TemplateReader.TileSize,
+                TemplateReader.TileSize, TemplateReader.TileSize);
         }
 
         void Draw_Text(Graphics g, string text, int x, int y)
