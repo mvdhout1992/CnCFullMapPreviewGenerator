@@ -791,7 +791,7 @@ Multi6	 Choosable	 Red */
 
             Palette Remap = Remap_For_House(u.Side, ColorScheme.Secondary);
 
-            if (u.Name == "HARV" || u.Name == "MCV")
+            if (u.Name.ToLower() == "harv" || u.Name.ToLower() == "mcv")
             {
                 Remap = Remap_For_House(u.Side, ColorScheme.Primary);
             }
