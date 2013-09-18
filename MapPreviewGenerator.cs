@@ -20,6 +20,7 @@ namespace CncFullMapPreviewGenerator
         static IniFile TilesetsINI;
         string TheaterFilesExtension;
         Palette Pal;
+        Dictionary<String, HouseInfo> HouseColors = new Dictionary<string, HouseInfo>();
         CellStruct[,] Cells = new CellStruct[64, 64];
         List<WaypointStruct> Waypoints = new List<WaypointStruct>();
         List<UnitInfo> Units = new List<UnitInfo>();
@@ -145,11 +146,6 @@ namespace CncFullMapPreviewGenerator
             BuildingDamageFrames.Add("tmpl", 5);
         }
 
-        void Load_Remap_Tables()
-        {
-
-        }
-
         int Frame_From_Building_HP(StructureInfo s)
         {
             if (s.HP > 128) { return 0; }
@@ -206,25 +202,29 @@ New added pale brown scheme */
         {
             int[] ShadowIndex = { 3, 4 };
 
-            ColorRemaps.Add("test", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
+            ColorRemaps.Add("Red", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
             new RGB[] {
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),
-                               new RGB(255, 0, 0),                          
+                               new RGB(240, 0, 0), // 127
+                               new RGB(220, 20, 8), // 126
+                               new RGB(196, 40, 20), // 125
+                               new RGB(172, 52, 28), // 124
+                               new RGB(120, 48, 36), // 122
+                               new RGB(96, 8, 0), // 46
+                               new RGB(56, 32, 20), // 120
+                               new RGB(16, 0, 0), // 47
+                               new RGB(196, 40, 20), // 125
+                               new RGB(172, 52, 28), // 124
+                               new RGB(152, 48, 36), // 123
+                               new RGB(120, 48, 36), // 122
+                               new RGB(112, 24, 0), // 42
+                               new RGB(88, 44, 28), // 121
+                               new RGB(56, 32, 20), // 120
+                               new RGB(56, 32, 20), // 120                 
                             }));
+        }
+
+        public void Load_House_Colors()
+        {
         }
 
         public MapPreviewGenerator(string FileName)
@@ -239,6 +239,7 @@ New added pale brown scheme */
 
             Parse_Theater();
             Load_Remap_Palettes();
+            Load_House_Colors();
 
             string MapBin = FileName.Replace(".ini", ".bin");
 
@@ -895,6 +896,18 @@ New added pale brown scheme */
         {
             Name = _Name;
             Yoffset = _Yoffset;
+        }
+    }
+
+    struct HouseInfo
+    {
+        public string PrimaryColor;
+        public string SecondaryColor;
+
+        public HouseInfo(string _PrimaryColor, string _SecondaryColor)
+        {
+            SecondaryColor = _SecondaryColor;
+            PrimaryColor = _PrimaryColor;
         }
     }
 
