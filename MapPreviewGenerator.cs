@@ -260,10 +260,52 @@ new RGB[] {
                                new RGB(132, 132, 156), // 203
                                new RGB(100, 100, 124), // 204
                                new RGB(72, 72, 92), // 205
-                               new RGB(60, 100, 56), // 115 TBD
-                               new RGB(60, 100, 56), // 198
-                               new RGB(48, 84, 44), // 114        
+                               new RGB(56, 72, 76), // 115
+                               new RGB(52, 52, 52), // 198
+                               new RGB(36, 44, 52), // 114        
+                            })); 
+            
+            ColorRemaps.Add("DarkGray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+new RGB[] {
+                // RemapIndexes=14,195,196,13,169,198,199,112,14,195,196,13,169,198,199,112
+                               new RGB(168, 168, 168), // 14
+                               new RGB(132, 132, 132), // 195
+                               new RGB(108, 108, 108), // 196
+                               new RGB(84, 84, 84), // 13
+                               new RGB(72, 72, 72), // 169
+                               new RGB(52, 52, 52), // 198
+                               new RGB(24, 24, 24), // 199
+                               new RGB(4, 4, 8), // 112
+                               new RGB(168, 168, 168), // 14
+                               new RGB(132, 132, 132), // 195
+                               new RGB(108, 108, 108), // 196
+                               new RGB(84, 84, 84), // 13
+                               new RGB(72, 72, 72), // 169
+                               new RGB(52, 52, 52), // 198
+                               new RGB(24, 24, 24), // 199
+                               new RGB(4, 4, 8), // 112        
                             }));
+            ColorRemaps.Add("Brown", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+new RGB[] {
+                // RemapIndexes=146,152,209,151,173,150,173,183,146,152,209,151,173,150,173,183
+                               new RGB(168, 168, 168), // 146
+                               new RGB(132, 132, 132), // 152
+                               new RGB(108, 108, 108), // 209
+                               new RGB(84, 84, 84), // 151
+                               new RGB(72, 72, 72), // 173
+                               new RGB(52, 52, 52), // 150
+                               new RGB(24, 24, 24), // 173
+                               new RGB(4, 4, 8), // 183
+                               new RGB(168, 168, 168), // 146
+                               new RGB(132, 132, 132), // 152
+                               new RGB(108, 108, 108), // 209
+                               new RGB(84, 84, 84), // 151
+                               new RGB(72, 72, 72), // 173
+                               new RGB(52, 52, 52), // 150
+                               new RGB(24, 24, 24), // 173
+                               new RGB(4, 4, 8), // 183        
+                            }));
+
         }
 
         /*
