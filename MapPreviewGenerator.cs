@@ -163,7 +163,7 @@ namespace CncFullMapPreviewGenerator
             ColorRemaps.Add("Yellow", Palette.Load("data/" + Theater + "/" + PalName + ".pal", ShadowIndex));
 
             ColorRemaps.Add("Red", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
-            new RGB[] {
+                new RGB[] {
                                new RGB(240, 0, 0), // 127
                                new RGB(220, 20, 8), // 126
                                new RGB(196, 40, 20), // 125
@@ -183,7 +183,7 @@ namespace CncFullMapPreviewGenerator
                             }));
 
             ColorRemaps.Add("Teal", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-            new RGB[] {
+                new RGB[] {
                 // RemapIndexes=2,119,118,135,136,138,112,12,118,135,136,137,138,139,114,112
                                new RGB(0, 168, 168), // 2
                                new RGB(116, 148, 156), // 119
@@ -203,7 +203,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(4, 4, 8), // 112                 
                             }));
             ColorRemaps.Add("Orange", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-new RGB[] {
+                new RGB[] {
                 // RemapIndexes=24,25,26,27,29,31,46,47,26,27,28,29,30,31,43,47
                                new RGB(236, 172, 72), // 24
                                new RGB(228, 148, 48), // 25
@@ -224,7 +224,7 @@ new RGB[] {
                             }));
 
             ColorRemaps.Add("Green", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-new RGB[] {
+                new RGB[] {
                 // RemapIndexes=5,165,166,167,159,142,140,199,166,167,157,3,159,143,142,141
                                new RGB(252, 252, 84), // 5
                                new RGB(208, 240, 0), // 165
@@ -245,7 +245,7 @@ new RGB[] {
                             }));
 
             ColorRemaps.Add("Gray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-new RGB[] {
+                new RGB[] {
                 // RemapIndexes=161,200,201,202,204,205,206,12,201,202,203,204,205,115,198,114
                                new RGB(216, 252, 252), // 161
                                new RGB(220, 220, 228), // 200
@@ -266,7 +266,7 @@ new RGB[] {
                             })); 
             
             ColorRemaps.Add("DarkGray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-new RGB[] {
+                new RGB[] {
                 // RemapIndexes=14,195,196,13,169,198,199,112,14,195,196,13,169,198,199,112
                                new RGB(168, 168, 168), // 14
                                new RGB(132, 132, 132), // 195
@@ -286,26 +286,66 @@ new RGB[] {
                                new RGB(4, 4, 8), // 112        
                             }));
             ColorRemaps.Add("Brown", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
-new RGB[] {
+                new RGB[] {
                 // RemapIndexes=146,152,209,151,173,150,173,183,146,152,209,151,173,150,173,183
-                               new RGB(168, 168, 168), // 146
-                               new RGB(132, 132, 132), // 152
-                               new RGB(108, 108, 108), // 209
+                               new RGB(180, 144, 80), // 146
+                               new RGB(164, 120, 88), // 152
+                               new RGB(168, 172, 76), // 209
+                               new RGB(128, 92, 72), // 151
+                               new RGB(112, 84, 8), // 173
+                               new RGB(104, 76, 56), // 150
+                               new RGB(112, 84, 8), // 173
+                               new RGB(16, 12, 4), // 183
+                               new RGB(180, 144, 80), // 146
+                               new RGB(164, 120, 88), // 152
+                               new RGB(168, 172, 76), // 209
                                new RGB(84, 84, 84), // 151
-                               new RGB(72, 72, 72), // 173
-                               new RGB(52, 52, 52), // 150
-                               new RGB(24, 24, 24), // 173
-                               new RGB(4, 4, 8), // 183
-                               new RGB(168, 168, 168), // 146
-                               new RGB(132, 132, 132), // 152
-                               new RGB(108, 108, 108), // 209
-                               new RGB(84, 84, 84), // 151
-                               new RGB(72, 72, 72), // 173
-                               new RGB(52, 52, 52), // 150
-                               new RGB(24, 24, 24), // 173
-                               new RGB(4, 4, 8), // 183        
+                               new RGB(112, 84, 8), // 173
+                               new RGB(104, 76, 56), // 150
+                               new RGB(112, 84, 8), // 173
+                               new RGB(16, 12, 4), // 183      
                             }));
 
+            ColorRemaps.Add("Fire", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+                new RGB[] {
+                // RemapIndexes=5,149,25,27,29,175,47,12,24,26,28,30,31,31,44,46
+                               new RGB(252, 252, 84), // 5
+                               new RGB(252, 208, 72), // 149
+                               new RGB(228, 148, 48), // 25
+                               new RGB(196, 96, 0), // 27
+                               new RGB(164, 56, 0), // 29
+                               new RGB(128, 16, 0), // 175
+                               new RGB(16, 0, 0), // 47
+                               new RGB(0, 0, 0), // 12
+                               new RGB(236, 172, 72), // 24
+                               new RGB(212, 120, 16), // 26
+                               new RGB(180, 72, 0), // 28
+                               new RGB(152, 40, 0), // 30
+                               new RGB(136, 24, 0), // 31
+                               new RGB(136, 24, 0), // 31
+                               new RGB(96, 16, 0), // 44
+                               new RGB(98, 8, 0), // 46      
+                            }));
+            ColorRemaps.Add("WarmSilver", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+                new RGB[] {
+                // RemapIndexes=192,164,132,155,133,197,112,12,163,132,155,133,134,197,154,198
+                               new RGB(216, 216, 216), // 192
+                               new RGB(216, 208, 192), // 164
+                               new RGB(176, 164, 132), // 132
+                               new RGB(160, 144, 124), // 155
+                               new RGB(144, 128, 116), // 133
+                               new RGB(84, 84, 84), // 197
+                               new RGB(4, 4, 8), // 112
+                               new RGB(0, 0, 0), // 12
+                               new RGB(208, 196, 172), // 163
+                               new RGB(176, 164, 132), // 132
+                               new RGB(160, 144, 124), // 155
+                               new RGB(144, 128, 116), // 133
+                               new RGB(116, 100, 100), // 134
+                               new RGB(84, 84, 84), // 197
+                               new RGB(64, 64, 64), // 154
+                               new RGB(52, 52, 52), // 198    
+                            }));
         }
 
         /*
