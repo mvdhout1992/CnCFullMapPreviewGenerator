@@ -374,6 +374,65 @@ Multi6	 Choosable	 Red */
             HouseColors.Add("multi4", new HouseInfo("Gray", "Gray"));
             HouseColors.Add("multi5", new HouseInfo("Yellow", "Yellow"));
             HouseColors.Add("multi6", new HouseInfo("Red", "Red"));
+
+            foreach (string section in MapINI.getSectionNames())
+            {
+                string sect = section.ToLower();
+                if (HouseColors.ContainsKey(sect))
+                {
+                    Console.WriteLine("section = {0}", sect);
+                    HouseInfo House = new HouseInfo();
+                    HouseColors.TryGetValue(sect, out House);
+
+                    string SecondaryColor = MapINI.getStringValue(section, "SecondaryColorScheme", null);
+                    if (SecondaryColor != null) Parse_Secondary_Color(ref House, SecondaryColor);
+
+                    string PrimaryColor = MapINI.getStringValue(section, "PrimaryColorScheme", null);
+                    if (PrimaryColor != null) Parse_Primary_Color(ref House, PrimaryColor);
+
+                    HouseColors.Remove(sect);
+                    HouseColors.Add(sect, House);
+                }
+            }
+
+            HouseInfo BadGuy = new HouseInfo();
+            HouseColors.TryGetValue("badguy", out BadGuy);
+
+            Console.WriteLine("PrimaryColor = {0}, SecondaryColor = {1}",
+                BadGuy.PrimaryColor, BadGuy.SecondaryColor);
+        }
+
+        void Parse_Primary_Color(ref HouseInfo House, string color)
+        {
+            switch (color.ToLower())
+            {
+                case "gdi": 
+                case "neutral":
+                case "jurassic":
+                    color = "Yellow"; break;
+                case "nod": color = "Red"; break;
+                default: break;
+            }
+
+            House.PrimaryColor = color;
+        }
+
+        void Parse_Secondary_Color(ref HouseInfo House, string color)
+        {
+            switch (color.ToLower())
+            {
+                case "gdi":
+                case "neutral":
+                case "jurassic":
+                    color = "Yellow"; break;
+                case "nod": color = "Gray"; break;
+                case "none":
+                    if (House.PrimaryColor == "Red") { color = "Red"; }
+                    break;
+                default: break;
+            }
+
+            House.SecondaryColor = color;
         }
 
         public Palette Remap_For_House(string HouseName, ColorScheme Scheme)
