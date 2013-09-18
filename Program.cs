@@ -18,7 +18,7 @@ namespace CncFullMapPreviewGenerator
             MapPreviewGenerator.Load();
 
             var MapPreview = new MapPreviewGenerator("x.ini");
-            MapPreview.Get_Bitmap(true).Save("derp.png");
+            MapPreview.Get_Bitmap(OnlyDrawVisible:true).Save("derp.png");
         }
 
 
