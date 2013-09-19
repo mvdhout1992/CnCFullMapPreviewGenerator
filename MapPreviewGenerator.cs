@@ -996,8 +996,11 @@ namespace CncFullMapPreviewGenerator
 
             ShpReader StructShp = ShpReader.Load(FileName);
 
+            int Frame = Frame_From_Building_HP(s);
+            if (s.Name.ToLower() == "gun") Frame += Frame_From_Unit_Angle(s.Angle);
+
             Bitmap StructBitmap = RenderUtils.RenderShp(StructShp, Remap_For_House(s.Side, ColorScheme.Primary), 
-                Frame_From_Building_HP(s));
+                Frame);
 
             g.DrawImage(StructBitmap, s.X * CellSize, s.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
         }

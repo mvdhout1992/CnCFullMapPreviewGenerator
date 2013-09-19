@@ -160,7 +160,7 @@ Count=38
 20=badguy,e4,256,853,2,guard,0,atk2
 
 [Structures]
-0=badguy,gun,256,1054,64,None
+0=badguy,gun,256,1054,0,None
 1=badguy,nuk2,256,3679,0,None
 2=badguy,obli,256,533,0,None
 3=badguy,sam,256,1038,0,chn3
@@ -262,7 +262,6 @@ Count=38
 24=neutral,mlrs,256,681,160,guard,none
 25=neutral,mlrs,256,548,0,guard,none
 26=neutral,msam,256,549,0,guard,none
-27=neutral,heli,256,478,0,guard,none
 
 [Goodguy]
 Allies=goodguy,neutral
