@@ -923,13 +923,27 @@ namespace CncFullMapPreviewGenerator
             Draw_Centered(g, UnitBitmap, u);
 
             // Draw vehicle turret
-            string Name = u.Name.ToLower();
-            if (Name == "htnk" || Name == "ltnk" || Name == "mtnk")
+            if (Has_Turret(u.Name.ToLower()))
             {
                 Bitmap TurretBitmap = RenderUtils.RenderShp(UnitShp, Remap,
                     Frame_From_Unit_Angle(u.Angle) + 32);
 
                 Draw_Centered(g, TurretBitmap, u);
+            }
+        }
+
+        bool Has_Turret(string Name)
+        {
+            switch (Name)
+            {
+                case "mtnk":
+                case "ltnk":
+                case "jeep":
+                case "mlrs":
+                case "msam":
+                case "bggy":
+                case "htnk": return true;
+                default: return false;
             }
         }
 
