@@ -505,22 +505,24 @@ namespace CncFullMapPreviewGenerator
 
         void Parse_Waypoints()
         {
-            var SectionKeyValues = MapINI.getSectionContent("Waypoints");
+            Dictionary<string, string> SectionKeyValues;
 
-            foreach (KeyValuePair<string, string> entry in SectionKeyValues)
+            if ((SectionKeyValues = MapINI.getSectionContent("Waypoints")) != null)
             {
-                int WayPoint = int.Parse(entry.Key);
-                int CellIndex = int.Parse(entry.Value);
+                foreach (KeyValuePair<string, string> entry in SectionKeyValues)
+                {
+                    int WayPoint = int.Parse(entry.Key);
+                    int CellIndex = int.Parse(entry.Value);
 
- //               Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, CellIndex);
-                WaypointStruct WP = new WaypointStruct();
-                WP.Number = WayPoint;
-                WP.X =  CellIndex % 64;
-                WP.Y = CellIndex / 64;
-                Waypoints.Add(WP);
+                    //               Console.WriteLine("Waypoint = {0}, Index = {1}", WayPoint, CellIndex);
+                    WaypointStruct WP = new WaypointStruct();
+                    WP.Number = WayPoint;
+                    WP.X = CellIndex % 64;
+                    WP.Y = CellIndex / 64;
+                    Waypoints.Add(WP);
+                }
             }
         }
-
         void Parse_Overlay(CellStruct[] Raw)
         {
             var SectionOverlay = MapINI.getSectionContent("Overlay");
