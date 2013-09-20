@@ -41,19 +41,19 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BooleanMode.cs" />
-    <Compile Include="Format40.cs" />
-    <Compile Include="Format80.cs" />
-    <Compile Include="IniFile.cs" />
-    <Compile Include="IniSection.cs" />
+    <Compile Include="NyergudsINI\BooleanMode.cs" />
+    <Compile Include="FileFormats\Format40.cs" />
+    <Compile Include="FileFormats\Format80.cs" />
+    <Compile Include="NyergudsINI\IniFile.cs" />
+    <Compile Include="NyergudsINI\IniSection.cs" />
     <Compile Include="MapPreviewGenerator.cs" />
-    <Compile Include="Palette.cs" />
+    <Compile Include="FileFormats\Palette.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="RenderUtils.cs" />
-    <Compile Include="ShpReader.cs" />
+    <Compile Include="FileFormats\ShpReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TemplateReader.cs" />
+    <Compile Include="FileFormats\TemplateReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

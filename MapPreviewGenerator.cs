@@ -964,7 +964,6 @@ namespace CncFullMapPreviewGenerator
 
             AdjustX = Get_2D_Rotation_X(OffsetX, OffsetY, Angle);
             AdjustY = Get_2D_Rotation_Y(OffsetX, OffsetY, Angle);
-            int X = 0;
         }
 
         int Get_2D_Rotation_X(int OffsetX, int OffsetY, int Angle)
@@ -1118,12 +1117,17 @@ namespace CncFullMapPreviewGenerator
               Cell.Tile = MapRandom.Next(0, 15);
           }
 
-            string TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "CLEAR1");
+          string TemplateString = "CLEAR1";
+
+          if (Cell.Template != 0 || Cell.Template != 0xFF)
+          {
+              TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "CLEAR1");
+          }
 
             TemplateReader Temp = TemplateReader.Load(File_String_From_Name(TemplateString));
 
             Bitmap TempBitmap = RenderUtils.RenderTemplate(Temp, Pal, Cell.Tile);
-            g.DrawImage(TempBitmap, X * CellSize, Y * CellSize, TempBitmap.Width, TempBitmap.Height);
+            g.DrawImage(TempBitmap, X * CellSize, Y * CellSize, CellSize, CellSize);
         }
 
         string File_String_From_Name(string Name)
