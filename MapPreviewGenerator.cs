@@ -908,11 +908,12 @@ namespace CncFullMapPreviewGenerator
 
         void Draw_Unit(UnitInfo u, Graphics g)
         {
+            string Name = u.Name.ToLower();
             ShpReader UnitShp = ShpReader.Load(General_File_String_From_Name(u.Name));
 
             Palette Remap = Remap_For_House(u.Side, ColorScheme.Secondary);
 
-            if (u.Name.ToLower() == "harv" || u.Name.ToLower() == "mcv")
+            if (Name == "harv" || Name == "mcv")
             {
                 Remap = Remap_For_House(u.Side, ColorScheme.Primary);
             }
@@ -920,16 +921,66 @@ namespace CncFullMapPreviewGenerator
             Bitmap UnitBitmap = RenderUtils.RenderShp(UnitShp, Remap, 
                 Frame_From_Unit_Angle(u.Angle));
 
-            Draw_Centered(g, UnitBitmap, u);
+            int CenterX = (u.X * CellSize) + 12 - (UnitBitmap.Width / 2);
+            int CenterY = (u.Y * CellSize) + 12 - (UnitBitmap.Height / 2);
+
+            g.DrawImage(UnitBitmap, CenterX, CenterY, UnitBitmap.Width, UnitBitmap.Height);
 
             // Draw vehicle turret
-            if (Has_Turret(u.Name.ToLower()))
+            if (Has_Turret(Name))
             {
+                int AdjustX = 0; int AdjustY = 0;
+                Get_Turret_Adjustment(Name, u.Angle, out AdjustX, out AdjustY);
+
                 Bitmap TurretBitmap = RenderUtils.RenderShp(UnitShp, Remap,
                     Frame_From_Unit_Angle(u.Angle) + 32);
 
-                Draw_Centered(g, TurretBitmap, u);
+                int TurretCenterX = (u.X * CellSize) + 12 - (TurretBitmap.Width / 2);
+                int TurretCenterY = (u.Y * CellSize) + 12 - (TurretBitmap.Height / 2);
+
+                g.DrawImage(TurretBitmap, TurretCenterX - AdjustX, TurretCenterY + AdjustY, UnitBitmap.Width, UnitBitmap.Height);
             }
+        }
+
+        void Get_Turret_Adjustment(string Name, int Angle, out int AdjustX, out int AdjustY)
+        {
+            int OffsetX = 0;
+            int OffsetY = 0;
+
+            switch (Name)
+            {
+                case "mlrs":
+                    OffsetY = 3;
+                    OffsetX = -1;
+                    break;
+                case "msam":
+                    OffsetY = 5;
+                    OffsetX = -1;
+                    break;
+                default: break;
+            }
+
+            AdjustX = Get_2D_Rotation_X(OffsetX, OffsetY, Angle);
+            AdjustY = Get_2D_Rotation_Y(OffsetX, OffsetY, Angle);
+            int X = 0;
+        }
+
+        int Get_2D_Rotation_X(int OffsetX, int OffsetY, int Angle)
+        {
+            double RadAngle = (((double)Angle) * 1.40625) * (Math.PI / 180.0);
+
+            double Result = OffsetX * Math.Cos(RadAngle) + OffsetY * Math.Sin(RadAngle);
+            int Rounded = (int)Math.Round(Result, 0);
+            return Rounded;
+        }
+
+        int Get_2D_Rotation_Y(int OffsetX, int OffsetY, int Angle)
+        {
+            double RadAngle = (((double)Angle) * 1.40625) * (Math.PI / 180.0);
+
+            double Result = OffsetX * Math.Sin(RadAngle) + OffsetY * Math.Cos(RadAngle);
+            int Rounded = (int)Math.Round(Result, 0);
+            return Rounded;
         }
 
         bool Has_Turret(string Name)
@@ -947,10 +998,10 @@ namespace CncFullMapPreviewGenerator
             }
         }
 
-        void Draw_Centered(Graphics g, Bitmap bitMap, UnitInfo u)
+        void Draw_Centered(Graphics g, Bitmap bitMap, UnitInfo u, int AdjustX, int AdjustY)
         {
-            int X = (u.X * CellSize) + 12 - (bitMap.Width / 2);
-            int Y = (u.Y * CellSize) + 12 - (bitMap.Height / 2);
+            int X = (u.X * CellSize) + 12 - AdjustX - (bitMap.Width / 2);
+            int Y = (u.Y * CellSize) + 12 + AdjustY - (bitMap.Height / 2);
 
             g.DrawImage(bitMap, X, Y, bitMap.Width, bitMap.Height);
         }

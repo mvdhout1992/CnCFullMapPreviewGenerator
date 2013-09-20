@@ -5,7 +5,7 @@ Percent=100
 Player=goodguy
 
 [Map]
-Theater=temperate
+Theater=snow
 X=1
 Y=1
 Width=4
@@ -27,10 +27,10 @@ Count=0
 [Structures]
 
 [Units]
-0=neutral,msam,256,131,0,guard,none
-1=neutral,msam,256,129,128,guard,none
-2=neutral,msam,256,257,64,guard,none
-3=neutral,msam,256,259,192,guard,none
+0=neutral,mlrs,256,129,0,guard,none
+1=neutral,msam,192,131,192,guard,none
+2=neutral,msam,256,195,64,guard,none
+3=neutral,mlrs,256,193,128,guard,none
 
 [Goodguy]
 Allies=goodguy
