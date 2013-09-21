@@ -18,7 +18,7 @@ namespace CncFullMapPreviewGenerator
         IniFile MapINI;
         static IniFile TilesetsINI;
         string TheaterFilesExtension;
-        Palette Pal;
+        Palette Pal, BaseStructuresPal;
         Dictionary<String, HouseInfo> HouseColors = new Dictionary<string, HouseInfo>();
         CellStruct[,] Cells = new CellStruct[64, 64];
         List<WaypointStruct> Waypoints = new List<WaypointStruct>();
@@ -458,6 +458,7 @@ namespace CncFullMapPreviewGenerator
             Parse_Theater();
             Load_Remap_Palettes();
             Load_House_Colors();
+            Parse_Opponent_House();
 
             string MapBin = FileName.Replace(".ini", ".bin");
 
@@ -491,8 +492,8 @@ namespace CncFullMapPreviewGenerator
             Parse_Smudges();
             Parse_Units();
             Parse_Infantry();
+            Parse_Base();
             Parse_Structures();
-//            Parse_Base();
             Parse_Cell_Triggers();
 
             for (int x = 0; x < 64; x++)
@@ -502,6 +503,20 @@ namespace CncFullMapPreviewGenerator
                     int Index = (x * 64) + y;
                     Cells[y, x] = Raw[Index];
                 }
+            }
+        }
+
+        void Parse_Opponent_House()
+        {
+            string PlayerHouse = MapINI.getStringValue("Basic", "Player", "None").ToLower();
+
+            if (PlayerHouse == "goodguy")
+            {
+                BaseStructuresPal = Remap_For_House("badguy", ColorScheme.Primary);
+            }
+            else
+            {
+                BaseStructuresPal = Remap_For_House("goodguy", ColorScheme.Primary);
             }
         }
 
@@ -835,8 +850,8 @@ namespace CncFullMapPreviewGenerator
 
             Draw_Smudges(g);
             Draw_Bibs(g);
-            Draw_Structures(g);
             Draw_Base_Structures(g);
+            Draw_Structures(g);
             Draw_Units(g);
             Draw_Infantries(g);
 
@@ -1093,7 +1108,7 @@ namespace CncFullMapPreviewGenerator
 
             ShpReader BaseStructShp = ShpReader.Load(FileName);
 
-            Bitmap BaseStructBitmap = RenderUtils.RenderShp(BaseStructShp, /*Remap_For_House(s.Side, ColorScheme.Primary)*/ Pal,
+            Bitmap BaseStructBitmap = RenderUtils.RenderShp(BaseStructShp, BaseStructuresPal,
                 0);
 
             Draw_Image_With_Opacity(g, BaseStructBitmap, bs.X * CellSize, bs.Y * CellSize);
