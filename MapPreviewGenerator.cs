@@ -652,7 +652,7 @@ namespace CncFullMapPreviewGenerator
 
         void Parse_Smudges()
         {
-            var SectionSmudges = MapINI.getSectionContent("Smudges");
+            var SectionSmudges = MapINI.getSectionContent("Smudge");
             if (SectionSmudges != null)
             {
                 foreach (KeyValuePair<string, string> entry in SectionSmudges)
@@ -750,8 +750,8 @@ namespace CncFullMapPreviewGenerator
 
                     Infantries.Add(inf);
 
-                    int subX; int subY;
-                    Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
+//                    int subX; int subY;
+//                    Sub_Cell_Pixel_Offsets(inf.SubCell, out subX, out subY);
 
 //                    Console.WriteLine("infantry name = {0}, Side = {1}, Angle = {2}, SubCell = {5}, X = {3}, Y = {4}", inf.Name,
 //                        inf.Side, inf.Angle, inf.X + subX, inf.Y + subY, inf.SubCell);
@@ -1067,9 +1067,15 @@ namespace CncFullMapPreviewGenerator
 
         void Draw_Smudge(SmudgeInfo sm, Graphics g)
         {
-            TemplateReader SmudgeTemp = TemplateReader.Load(General_File_String_From_Name(sm.Name));
+            string Name = sm.Name.ToLower();
+            if (Name == "bib1" || Name == "bib2" || Name == "bib3")
+            {
+                Draw_Bib(g, Name, sm.X, sm.Y);
+            }
 
-            Bitmap StructBitmap = RenderUtils.RenderTemplate(SmudgeTemp, Pal, sm.State);
+            ShpReader SmudgeShp = ShpReader.Load(File_String_From_Name(sm.Name));
+
+            Bitmap StructBitmap = RenderUtils.RenderShp(SmudgeShp, Pal, sm.State);
 
             g.DrawImage(StructBitmap, sm.X * CellSize, sm.Y * CellSize, StructBitmap.Width, StructBitmap.Height);
         }
@@ -1079,17 +1085,18 @@ namespace CncFullMapPreviewGenerator
         {
             foreach (BibInfo bib in Bibs)
             {
-                Draw_Bib(bib, g);
+                Draw_Bib(g, bib.Name, bib.X,bib.Y);
             }
         }
 
-        void Draw_Bib(BibInfo bib, Graphics g)
+        void Draw_Bib(Graphics g, string Name, int X, int Y)
         {
-            ShpReader BibShp = ShpReader.Load(File_String_From_Name(bib.Name));
+            Name = Name.ToLower();
+            ShpReader BibShp = ShpReader.Load(File_String_From_Name(Name));
             int Frame = 0;
 
             int maxY = -1; int maxX = -1;
-            switch (bib.Name.ToLower())
+            switch (Name)
             {
                 case "bib1": maxY = 2; maxX = 4; break;
                 case "bib2": maxY = 2; maxX = 3; break;
@@ -1103,7 +1110,7 @@ namespace CncFullMapPreviewGenerator
                 {
                     Bitmap StructBitmap = RenderUtils.RenderShp(BibShp, Pal, Frame);
 
-                    g.DrawImage(StructBitmap, (bib.X + x) * CellSize, (bib.Y + y) * CellSize, StructBitmap.Width, StructBitmap.Height);
+                    g.DrawImage(StructBitmap, (X + x) * CellSize, (Y + y) * CellSize, StructBitmap.Width, StructBitmap.Height);
 
                     Frame++;
                 }
@@ -1119,9 +1126,9 @@ namespace CncFullMapPreviewGenerator
 
           string TemplateString = "CLEAR1";
 
-          if (Cell.Template != 0 || Cell.Template != 0xFF)
+          if (Cell.Template != 0 && Cell.Template != 255)
           {
-              TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), "CLEAR1");
+              TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), null);
           }
 
             TemplateReader Temp = TemplateReader.Load(File_String_From_Name(TemplateString));

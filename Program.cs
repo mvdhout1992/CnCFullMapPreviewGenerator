@@ -12,6 +12,11 @@ namespace CncFullMapPreviewGenerator
     {
         static void Main(string[] args)
         {
+
+            // Make sure the Parse() functions parse commas and periods correctly
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
             if (args.Length < 1)
             {
                 Console.WriteLine("ERROR: Not enough arguments, at least 1 argument is needed.");
@@ -42,29 +47,10 @@ namespace CncFullMapPreviewGenerator
             if (OutFile == null)
                 OutFile = args[0].ToLower().Replace(".ini", ".png");
 
-            // Make sure the Parse() functions parse commas and periods correctly
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-
             MapPreviewGenerator.Load();
 
-            for (int i = 0; i < 5; i++)
-            {
-                // Start stopwatch
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                var MapPreview = new MapPreviewGenerator(args[0]);
-                MapPreview.Get_Bitmap(DrawVisibleOnly).Save(OutFile);
-
-                // Stop stopwatch
-                Console.WriteLine("");
-                Console.WriteLine("Created image '{0}' using map '{1}'.", OutFile, args[0]);
-                Console.WriteLine("Time elapsed: {0} milliseconds.",
-                stopwatch.ElapsedMilliseconds);
-            }
-
-//            Console.Read();
+            var MapPreview = new MapPreviewGenerator(args[0]);
+            MapPreview.Get_Bitmap(DrawVisibleOnly).Save(OutFile);
         }
 
 
