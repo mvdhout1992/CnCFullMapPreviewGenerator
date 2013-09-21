@@ -28,7 +28,7 @@ namespace CncFullMapPreviewGenerator
         List<StructureInfo> Structures = new List<StructureInfo>();
         List<BaseStructureInfo> BaseStructures = new List<BaseStructureInfo>();
         List<CellTriggerInfo> CellsTriggers = new List<CellTriggerInfo>();
-        Dictionary<string, Palette> ColorRemaps = new Dictionary<string, Palette>();
+        static Dictionary<string, Palette> ColorRemaps = new Dictionary<string, Palette>();
         List<BibInfo> Bibs = new List<BibInfo>();
         static Dictionary<string, BuildingBibInfo> BuildingBibs = new Dictionary<string, BuildingBibInfo>();
         static Dictionary<string, int> BuildingDamageFrames = new Dictionary<string, int>();
@@ -41,6 +41,7 @@ namespace CncFullMapPreviewGenerator
             TilesetsINI = new IniFile("data/tilesets.ini");
             MapRandom = new Random();;
 
+            Load_Remap_Palettes();
             Load_Building_Damage_Frames();
             Load_Building_Bibs();
 
@@ -158,13 +159,13 @@ namespace CncFullMapPreviewGenerator
             return Frame;
         }
 
-        void Load_Remap_Palettes()
+        static void Load_Remap_Palettes()
         {
             int[] ShadowIndex = { 3, 4 };
 
-            ColorRemaps.Add("Yellow", Palette.Load("data/" + Theater + "/" + PalName + ".pal", ShadowIndex));
+            ColorRemaps.Add("Yellow", Palette.Load("data/temperate/temperat.pal", ShadowIndex));
 
-            ColorRemaps.Add("Red", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex, 
+            ColorRemaps.Add("Red", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex, 
                 new RGB[] {
                                new RGB(240, 0, 0), // 127
                                new RGB(220, 20, 8), // 126
@@ -184,7 +185,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(56, 32, 20), // 120                 
                             }));
 
-            ColorRemaps.Add("Teal", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Teal", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=2,119,118,135,136,138,112,12,118,135,136,137,138,139,114,112
                                new RGB(0, 168, 168), // 2
@@ -204,7 +205,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(36, 44, 62), // 114
                                new RGB(4, 4, 8), // 112                 
                             }));
-            ColorRemaps.Add("Orange", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Orange", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=24,25,26,27,29,31,46,47,26,27,28,29,30,31,43,47
                                new RGB(236, 172, 72), // 24
@@ -225,7 +226,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(16, 0, 0), // 47          
                             }));
 
-            ColorRemaps.Add("Green", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Green", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=5,165,166,167,159,142,140,199,166,167,157,3,159,143,142,141
                                new RGB(252, 252, 84), // 5
@@ -246,7 +247,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(48, 84, 44), // 141        
                             }));
 
-            ColorRemaps.Add("Gray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Gray", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=161,200,201,202,204,205,206,12,201,202,203,204,205,115,198,114
                                new RGB(216, 252, 252), // 161
@@ -265,9 +266,9 @@ namespace CncFullMapPreviewGenerator
                                new RGB(56, 72, 76), // 115
                                new RGB(52, 52, 52), // 198
                                new RGB(36, 44, 52), // 114        
-                            })); 
-            
-            ColorRemaps.Add("DarkGray", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+                            }));
+
+            ColorRemaps.Add("DarkGray", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=14,195,196,13,169,198,199,112,14,195,196,13,169,198,199,112
                                new RGB(168, 168, 168), // 14
@@ -287,7 +288,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(24, 24, 24), // 199
                                new RGB(4, 4, 8), // 112        
                             }));
-            ColorRemaps.Add("Brown", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Brown", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=146,152,209,151,173,150,173,183,146,152,209,151,173,150,173,183
                                new RGB(180, 144, 80), // 146
@@ -308,7 +309,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(16, 12, 4), // 183      
                             }));
 
-            ColorRemaps.Add("Fire", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("Fire", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=5,149,25,27,29,175,47,12,24,26,28,30,31,31,44,46
                                new RGB(252, 252, 84), // 5
@@ -328,7 +329,7 @@ namespace CncFullMapPreviewGenerator
                                new RGB(96, 16, 0), // 44
                                new RGB(98, 8, 0), // 46      
                             }));
-            ColorRemaps.Add("WarmSilver", Palette.Load_With_Remaps("data/" + Theater + "/" + PalName + ".pal", ShadowIndex,
+            ColorRemaps.Add("WarmSilver", Palette.Load_With_Remaps("data/temperate/temperat.pal", ShadowIndex,
                 new RGB[] {
                 // RemapIndexes=192,164,132,155,133,197,112,12,163,132,155,133,134,197,154,198
                                new RGB(216, 216, 216), // 192
@@ -456,7 +457,6 @@ namespace CncFullMapPreviewGenerator
             MapY = MapINI.getIntValue("Map", "Y", -1);
 
             Parse_Theater();
-            Load_Remap_Palettes();
             Load_House_Colors();
             Parse_Opponent_House();
 
