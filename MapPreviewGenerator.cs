@@ -107,6 +107,7 @@ namespace CncFullMapPreviewGenerator
             BuildingDamageFrames.Add("sam", 64);
             BuildingDamageFrames.Add("silo", 5);
             BuildingDamageFrames.Add("weap2", 10);
+            BuildingDamageFrames.Add("weap", 1);
             BuildingDamageFrames.Add("v01", 1);
             BuildingDamageFrames.Add("v02", 1);
             BuildingDamageFrames.Add("v03", 1);
