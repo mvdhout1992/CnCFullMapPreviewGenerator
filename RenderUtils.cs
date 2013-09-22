@@ -14,6 +14,7 @@ namespace CncFullMapPreviewGenerator
 
         static public Bitmap RenderShp(ShpReader shp, Palette p, int Frame_)
         {
+            /*            
             if (RenderUtils.ShpFramesCache.ContainsKey(shp))
             {
                 Bitmap[] Frames = null;
@@ -23,13 +24,13 @@ namespace CncFullMapPreviewGenerator
                 {
                     return Frames[Frame_];
                 }
-            }
+            } 
             else
             {
                 Bitmap[] ShpBitmaps = new Bitmap[100];
                 RenderUtils.ShpFramesCache.Add(shp, ShpBitmaps);
             }
-
+            */
             var frame = shp[Frame_];
 
             var bitmap = new Bitmap(shp.Width, shp.Height, PixelFormat.Format8bppIndexed);
@@ -51,10 +52,10 @@ namespace CncFullMapPreviewGenerator
 
             bitmap.UnlockBits(data);
 
-            Bitmap[] ShpArray = null;
+/*            Bitmap[] ShpArray = null;
             ShpFramesCache.TryGetValue(shp, out ShpArray);
+            ShpArray[Frame_] = bitmap; */
 
-            ShpArray[Frame_] = bitmap;
             return bitmap;
         }
 
@@ -74,7 +75,7 @@ namespace CncFullMapPreviewGenerator
             {
                 Bitmap[] TemplateBitmaps = new Bitmap[50];
                 RenderUtils.TemplateTileCache.Add(template, TemplateBitmaps);
-            }
+            } 
 
 
             var bitmap = new Bitmap(TemplateReader.TileSize, TemplateReader.TileSize,
@@ -109,7 +110,6 @@ namespace CncFullMapPreviewGenerator
 
             Bitmap[] TemplateArray = null;
             TemplateTileCache.TryGetValue(template, out TemplateArray);
-
             TemplateArray[frame] = bitmap;
 
             return bitmap;
@@ -117,13 +117,14 @@ namespace CncFullMapPreviewGenerator
 
         public static Bitmap RenderTemplate(TemplateReader template, Palette p)
         {
+            
             if (RenderUtils.TemplateCache.ContainsKey(template))
             {
                 Bitmap Ret = null;
                 RenderUtils.TemplateCache.TryGetValue(template, out Ret);
                 return Ret;
             }
-
+            
             var bitmap = new Bitmap(TemplateReader.TileSize * template.Width, TemplateReader.TileSize * template.Height,
                 PixelFormat.Format8bppIndexed);
 
@@ -155,8 +156,17 @@ namespace CncFullMapPreviewGenerator
             }
 
             bitmap.UnlockBits(data);
+
             TemplateCache.Add(template, bitmap);
+
             return bitmap;
+        }
+
+        public static void Clear_Caches()
+        {
+            ShpFramesCache.Clear();
+            TemplateCache.Clear();
+            TemplateTileCache.Clear();
         }
 
     }

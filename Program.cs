@@ -45,7 +45,7 @@ namespace CncFullMapPreviewGenerator
             }
 
             if (OutFile == null)
-                OutFile = args[0].ToLower().Replace(".ini", ".png");
+                OutFile = args[0] + ".png";
 
             MapPreviewGenerator.Load();
 

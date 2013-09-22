@@ -502,6 +502,11 @@ namespace CncFullMapPreviewGenerator
                 {
                     int Index = (x * 64) + y;
                     Cells[y, x] = Raw[Index];
+
+                    if (Is_Out_Of_Bounds(y, x))
+                    {
+                        Cells[y, x].IsOutOfBounds = true;
+                    }
                 }
             }
         }
@@ -830,16 +835,12 @@ namespace CncFullMapPreviewGenerator
                 {
                     CellStruct data = Cells[x, y];
 
+                    if (OnlyDrawVisible && data.IsOutOfBounds)
+                    {
+                        continue;
+                    }
+
                     Draw_Template(data, g, x, y);
-                }
-            }
-
-
-            for (int y = 0; y < 64; y++)
-            {
-                for (int x = 0; x < 64; x++)
-                {
-                    CellStruct data = Cells[x, y];
 
                     if (data.Overlay != null)
                     {
@@ -861,6 +862,11 @@ namespace CncFullMapPreviewGenerator
                 {
                     CellStruct data = Cells[x, y];
 
+                    if (OnlyDrawVisible && data.IsOutOfBounds)
+                    {
+                        continue;
+                    }
+
                     if (data.Terrain != null)
                     {
                         Draw_Terrain(data, g, x, y);
@@ -871,13 +877,17 @@ namespace CncFullMapPreviewGenerator
             Draw_Waypoints(g);
             Draw_Cell_Triggers(g);
 
-            for (int y = 0; y < 64; y++)
+            if (OnlyDrawVisible == false)
             {
-                for (int x = 0; x < 64; x++)
+                for (int y = 0; y < 64; y++)
                 {
-                    if (Is_Out_Of_Bounds(x, y))
+                    for (int x = 0; x < 64; x++)
                     {
-                        Draw_Out_Of_Bounds(g, x, y);
+                        CellStruct data = Cells[x, y];
+                        if (data.IsOutOfBounds/* Is_Out_Of_Bounds(x, y) */)
+                        {
+                            Draw_Out_Of_Bounds(g, x, y);
+                        }
                     }
                 }
             }
@@ -888,6 +898,7 @@ namespace CncFullMapPreviewGenerator
                 bitMap = Get_In_Bounds_Region(bitMap);
             }
 
+            RenderUtils.Clear_Caches();
             return bitMap;
         }
 
@@ -1524,7 +1535,7 @@ namespace CncFullMapPreviewGenerator
         public int Tile;
         public string Overlay;
         public string Terrain;
-        public int Waypoint;
+        public bool IsOutOfBounds;
     }
 
     struct WaypointStruct
