@@ -1011,7 +1011,7 @@ namespace CncFullMapPreviewGenerator
                 int TurretCenterX = (u.X * CellSize) + 12 - (TurretBitmap.Width / 2);
                 int TurretCenterY = (u.Y * CellSize) + 12 - (TurretBitmap.Height / 2);
 
-                g.DrawImage(TurretBitmap, TurretCenterX - AdjustX, TurretCenterY + AdjustY, UnitBitmap.Width, UnitBitmap.Height);
+                g.DrawImage(TurretBitmap, TurretCenterX + AdjustX, TurretCenterY + AdjustY, UnitBitmap.Width, UnitBitmap.Height);
             }
         }
 
@@ -1023,12 +1023,12 @@ namespace CncFullMapPreviewGenerator
             switch (Name)
             {
                 case "mlrs":
-                    OffsetY = 3;
-                    OffsetX = -1;
+                    OffsetY = 2;
+                    OffsetX = 1;
                     break;
                 case "msam":
                     OffsetY = 5;
-                    OffsetX = -1;
+                    OffsetX = 1;
                     break;
                 default: break;
             }
@@ -1041,7 +1041,7 @@ namespace CncFullMapPreviewGenerator
         {
             double RadAngle = (((double)Angle) * 1.40625) * (Math.PI / 180.0);
 
-            double Result = OffsetX * Math.Cos(RadAngle) + OffsetY * Math.Sin(RadAngle);
+            double Result = OffsetX * Math.Cos(RadAngle) - OffsetY * Math.Sin(RadAngle);
             int Rounded = (int)Math.Round(Result, 0);
             return Rounded;
         }
