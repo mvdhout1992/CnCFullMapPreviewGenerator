@@ -1242,7 +1242,7 @@ namespace CncFullMapPreviewGenerator
         {
           if (Cell.Template == 255  && Cell.Tile == 0) 
           {
-              Cell.Tile = MapRandom.Next(0, 15);
+              Cell.Tile = (X % 4) + ((Y % 4) * 4);
           }
 
           string TemplateString = "CLEAR1";
