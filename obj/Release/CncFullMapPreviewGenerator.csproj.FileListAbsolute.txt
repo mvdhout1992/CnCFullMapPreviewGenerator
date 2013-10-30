@@ -4,3 +4,9 @@ C:\Users\Maikel\Desktop\CnCFullMapPreviewGenerator\obj\Release\CncFullMapPreview
 C:\Users\Maikel\Desktop\CnCFullMapPreviewGenerator\CncFullMapPreviewGenerator.exe
 C:\Users\Maikel\Desktop\CnCFullMapPreviewGenerator\CncFullMapPreviewGenerator.pdb
 C:\Users\Maikel\Desktop\CnCFullMapPreviewGenerator\obj\Release\CncFullMapPreviewGenerator.csprojResolveAssemblyReference.cache
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\CncFullMapPreviewGenerator.exe.config
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\obj\Release\CncFullMapPreviewGenerator.exe
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\obj\Release\CncFullMapPreviewGenerator.pdb
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\obj\Release\CncFullMapPreviewGenerator.csprojResolveAssemblyReference.cache
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\CncFullMapPreviewGenerator.exe
+C:\Users\maikel\Desktop\RA95 Patch\CnCFullMapPreviewGenerator\CncFullMapPreviewGenerator.pdb

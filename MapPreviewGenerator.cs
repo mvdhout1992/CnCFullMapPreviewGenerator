@@ -1240,7 +1240,7 @@ namespace CncFullMapPreviewGenerator
 
         void Draw_Template(CellStruct Cell, Graphics g, int X, int Y)
         {
-          if (Cell.Template == 255  && Cell.Tile == 0) 
+          if (Cell.Template == 255  && ( Cell.Tile == 0 || Cell.Tile == 255) ) 
           {
               Cell.Tile = (X % 4) + ((Y % 4) * 4);
           }
@@ -1252,7 +1252,10 @@ namespace CncFullMapPreviewGenerator
               TemplateString = TilesetsINI.getStringValue("TileSets", Cell.Template.ToString(), null);
           }
 
-            TemplateReader Temp = TemplateReader.Load(File_String_From_Name(TemplateString));
+          string TemplateFileString = File_String_From_Name(TemplateString);
+          if (!File.Exists(TemplateFileString)) return;
+
+          TemplateReader Temp = TemplateReader.Load(TemplateFileString);
 
             Bitmap TempBitmap = RenderUtils.RenderTemplate(Temp, Pal, Cell.Tile);
             g.DrawImage(TempBitmap, X * CellSize, Y * CellSize, CellSize, CellSize);
